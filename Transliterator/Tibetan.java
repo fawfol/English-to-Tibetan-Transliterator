@@ -352,7 +352,7 @@ public class Tibetan {
                 continue; // Don't process this input yet, wait for next input
             }
             // Check if any combination of the currentInput exists in tibetanMap
-            String possibleMatch = tibetanMap.get(currentInput.toString());
+            String possibleMatch = TibetanMap.get(currentInput.toString());
             if (possibleMatch != null) {
                 tibetanTransliteration.append(getCombination(possibleMatch)); // Convert the valid match
                 currentInput.setLength(0); // Reset currentInput after a match
