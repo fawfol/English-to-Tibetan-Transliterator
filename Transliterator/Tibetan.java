@@ -377,7 +377,7 @@ public class Tibetan {
         // Loop through input lengths starting from the longest possible match
         for (int length = currentInput.length(); length > 0; length--) {
             String subString = currentInput.substring(0, length);
-            if (tibetanMap.containsKey(subString)) {
+            if (TibetanMap.containsKey(subString)) {
                 return subString; // Return the valid match
             }
         }
