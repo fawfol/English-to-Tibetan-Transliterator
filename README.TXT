@@ -13,4 +13,3 @@ PURPOSE OF PROJECT: Transliteration
 VERSION or DATE: idk
 HOW TO START THIS PROJECT: by coding
 AUTHORS: Tenzin Kalsang (remove the Author's', its a solo project)
-USER INSTRUCTIONS: no intructions.. fk around and find out .. ye ,,,,,,,, pls
