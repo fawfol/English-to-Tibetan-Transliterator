@@ -2,7 +2,6 @@ import java.util.*;
 
 public class TibetanTransliterator {
 
-    // Tibetan Transliteration Map (similar to your Python dictionary)
     private static final Map<String, String> TIBETAN_MAP = createTibetanMap();
 
     // Sorted keys by length descending to match longest first
@@ -18,9 +17,9 @@ public class TibetanTransliterator {
         // Consonants + vowels
         // Consonants + Vowels
         map.put("ka", "ཀ");        map.put("kha", "ཁ");        map.put("gha", "ག");        map.put("nga", "ང");
-        map.put("ca", "ཅ");        map.put("cha", "ཆ");        map.put("ja", "ཇ");        map.put("jha", "ཇ");   // same as 'ja'        map.put("nya", "ཉ");       
+        map.put("ca", "ཅ");        map.put("cha", "ཆ");        map.put("ja", "ཇ");        map.put("jha", "ཇ");  
         map.put("ta", "ཏ");        map.put("tha", "ཐ");        map.put("dha", "ད");        map.put("na", "ན");       
-        map.put("pa", "པ");        map.put("pha", "ཕ");        map.put("ba", "བ");        map.put("bha", "བ");   // same as 'ba'        map.put("ma", "མ");        
+        map.put("pa", "པ");        map.put("pha", "ཕ");        map.put("ba", "བ");        map.put("bha", "བ");      
         map.put("tza", "ཙ");        map.put("tsa", "ཚ");        map.put("za", "ཛ");        map.put("wa", "ཝ");
         map.put("zha", "ཞ");        map.put("sza", "ཟ");        map.put("ya", "ཡ");        map.put("ra", "ར");
         map.put("la", "ལ");        map.put("sha", "ཤ");        map.put("sa", "ས");
@@ -106,12 +105,6 @@ public class TibetanTransliterator {
 	
         return map;
     }
-
-    /**
-     * Transliterates a Romanized (Wylie-style) string into Tibetan script.
-     * @param romanString input string in Romanized Tibetan
-     * @return Tibetan script string
-     */
     public static String transliterate(String romanString) {
         if (romanString == null) {
             return "";
@@ -124,7 +117,6 @@ public class TibetanTransliterator {
         while (i < lower.length()) {
             char currentChar = lower.charAt(i);
 
-            // Handle space => tsheg character (་)
             if (currentChar == ' ') {
                 tibetanOutput.append('་'); 
                 i++;
@@ -151,3 +143,4 @@ public class TibetanTransliterator {
     }
 
 }
+
