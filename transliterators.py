@@ -32,7 +32,7 @@ def process_character(state, char):
         # Try to combine the waiting character with the new one
         potential_combo = state['current_stack'] + char
         
-        if potential_combo in TIBETAN_MAP
+        if potential_combo in TIBETAN_MAP:
             # It needs a vowel. So we update the stack and keep waiting.
             if char == 'h' or char == 'y':
                  state['current_stack'] = potential_combo
