@@ -1,162 +1,156 @@
 import gradio as gr
 
+# Wylie Transliteration Map (cleaned and expanded from the Java version)
+# Keys are sorted by length descending in the processing function
+# to ensure the longest possible match is found first (e.g., 'khya' before 'khy' or 'k').
 TIBETAN_MAP = {
     # Consonants + Vowels
-    "ka": "ཀ", "ki": "ཀི", "ku": "ཀུ", "ke": "ཀེ", "ko": "ཀོ", "kha": "ཁ", "khi": "ཁི", "khu": "ཁུ", "khe": "ཁེ", "kho": "ཁོ", "ga": "ག", "gi": "གི", "gu": "གུ", "ge": "གེ", "go": "གོ", "nga": "ང", "ngi": "ངི", "ngu": "ངུ", "nge": "ངེ", "ngo": "ངོ",
-    "ca": "ཅ", "ci": "ཅི", "cu": "ཅུ", "ce": "ཅེ", "co": "ཅོ", "cha": "ཆ", "chi": "ཆི", "chu": "ཆུ", "che": "ཆེ", "cho": "ཆོ", "ja": "ཇ", "ji": "ཇི", "ju": "ཇུ", "je": "ཇེ", "jo": "ཇོ", "nya": "ཉ", "nyi": "ཉི", "nyu": "ཉུ", "nye": "ཉེ", "nyo": "ཉོ",
-    "ta": "ཏ", "ti": "ཏི", "tu": "ཏུ", "te": "ཏེ", "to": "ཏོ", "tha": "ཐ", "thi": "ཐི", "thu": "ཐུ", "the": "ཐེ", "tho": "ཐོ", "da": "ད", "di": "དི", "du": "དུ", "de": "དེ", "do": "དོ", "na": "ན", "ni": "ནི", "nu": "ནུ", "ne": "ནེ", "no": "ནོ",
-    "pa": "པ", "pi": "པི", "pu": "པུ", "pe": "པེ", "po": "པོ", "pha": "ཕ", "phi": "ཕི", "phu": "ཕུ", "phe": "ཕེ", "pho": "ཕོ", "ba": "བ", "bi": "བི", "bu": "བུ", "be": "བེ", "bo": "བོ", "ma": "མ", "mi": "མི", "mu": "མུ", "me": "མེ", "mo": "མོ",
-    "tsa": "ཙ", "tsi": "ཙི", "tsu": "ཙུ", "tse": "ཙེ", "tso": "ཙོ", "tsha": "ཚ", "tshi": "ཚི", "tshu": "ཚུ", "tshe": "ཚེ", "tsho": "ཚོ", "dza": "ཛ", "dzi": "ཛི", "dzu": "ཛུ", "dze": "ཛེ", "dzo": "ཛོ", "wa": "ཝ", "wi": "ཝི", "wu": "ཝུ", "we": "ཝེ", "wo": "ཝོ",
-    "zha": "ཞ", "zhi": "ཞི", "zhu": "ཞུ", "zhe": "ཞེ", "zho": "ཞོ", "za": "ཟ", "zi": "ཟི", "zu": "ཟུ", "ze": "ཟེ", "zo": "ཟོ", "a": "ཨ", "'a": "འ", "ya": "ཡ", "yi": "ཡི", "yu": "ཡུ", "ye": "ཡེ", "yo": "ཡོ",
-    "ra": "ར", "ri": "རི", "ru": "རུ", "re": "རེ", "ro": "རོ", "la": "ལ", "li": "ལི", "lu": "ལུ", "le": "ལེ", "lo": "ལོ", "sha": "ཤ", "shi": "ཤི", "shu": "ཤུ", "she": "ཤེ", "sho": "ཤོ", "sa": "ས", "si": "སི", "su": "སུ", "se": "སེ", "so": "སོ", "ha": "ཧ", "hi": "ཧི", "hu": "ཧུ", "he": "ཧེ", "ho": "ཧོ",
-    # Independent Vowels
-    "i": "ཨི", "u": "ཨུ", "e": "ཨེ", "o": "ཨོ",
-    # Subjoined letters
-    "kya": "ཀྱ", "khya": "ཁྱ", "gya": "གྱ", "kra": "ཀྲ", "khra": "ཁྲ", "gra": "གྲ", "pya": "པྱ", "phya": "ཕྱ", "bya": "བྱ", "mya": "མྱ",
-    # Suffix letters (Jejug) used for syllable endings.
-    "g": "ག", "ng": "ང", "d": "ད", "n": "ན", "b": "བ", "m": "མ", "'": "འ", "r": "ར", "l": "ལ", "s": "ས", "k": "ཀ", "p":"པ",
-}
+    "ka": "ཀ",   "kha": "ཁ",   "gha": "ག",   "nga": "ང",
+                "ca": "ཅ",   "cha": "ཆ",   "ja": "ཇ",   "jha": "ཇ",   "nya": "ཉ",
+                "ta": "ཏ",   "tha": "ཐ",   "dha": "ད",   "na": "ན",
+                "pa": "པ",   "pha": "ཕ",   "ba": "བ",   "bha": "བ",   "ma": "མ",
+                "tza": "ཙ",  "tsa": "ཚ",   "za": "ཛ",   "wa": "ཝ",   "zha": "ཞ",
+                "sza": "ཟ",  "ya": "ཡ",   "ra": "ར",   "la": "ལ",   "sha": "ཤ",
+                "sa": "ས",   "ha": "ཧ",   "a": "ཨ",
 
-ENDING_LETTERS = {"g", "ng", "d", "n", "b", "m", "'", "r", "l", "s", "k", "p"}
-VOWELS = {"a", "i", "u", "e", "o"}
+                # Syllable-final (ending) consonants ('jejug chuu')
+                "g": "ག",    "ng": "ང",   "n": "ན",   "b": "བ",    "aa": "འ",
+                "m": "མ",    "l": "ལ",   "r": "ར",   "s": "ས",    "p": "པ",
+                "k": "ག",    "dh": "ད",
 
-def process_character(state, char):
-    """
-    This function contains the core logic, processing one character at a time
-    based on the current state, exactly like the Java loop.
-    """
-    # If waiting for the next character (like after 'n' was typed)
-    if state['is_waiting']:
-        state['is_waiting'] = False
-        
-        # Try to combine the waiting character with the new one
-        potential_combo = state['current_stack'] + char
-        
-        if potential_combo in TIBETAN_MAP:
-            # It needs a vowel. So we update the stack and keep waiting.
-            if char == 'h' or char == 'y':
-                 state['current_stack'] = potential_combo
-                 state['is_waiting'] = True 
-            else:
-                state['tibetan_output'] += TIBETAN_MAP[potential_combo]
-                state['current_stack'] = ""
-        else:
-            suffix = state['current_stack']
-            if suffix in TIBETAN_MAP:
-                state['tibetan_output'] += TIBETAN_MAP[suffix]
-            
-            # Start new stack with the current character
-            state['current_stack'] = char
-            if char in ENDING_LETTERS:
-                 state['is_waiting'] = True
-    else:
-        state['current_stack'] += char
-        
-        # Check if the new stack is a complete syllable
-        if state['current_stack'] in TIBETAN_MAP:
-            # If so, we wait to see what comes next.
-            if state['current_stack'] in ENDING_LETTERS or state['current_stack'].endswith(('h', 'y')):
-                state['is_waiting'] = True
-            # Otherwise, it's a full syllable (like 'ka'). Finalize and clear.
-            else:
-                state['tibetan_output'] += TIBETAN_MAP[state['current_stack']]
-                state['current_stack'] = ""
+                # Vowel diacritics (applied to consonants)
+                "ki": "ཀི",  "ku": "ཀུ",  "ke": "ཀེ",  "ko": "ཀོ",
+                "khi": "ཁི", "khu": "ཁུ", "khe": "ཁེ", "kho": "ཁོ",
+                "gi": "གི",  "gu": "གུ",  "ge": "གེ",  "go": "གོ",
+                "ghi": "གི", "ghu": "གུ", "ghe": "གེ", "gho": "གོ",
+                "ngi": "ངི", "ngu": "ངུ", "nge": "ངེ", "ngo": "ངོ",
+                "chhi": "ཅི","chhu": "ཅུ","chhe": "ཅེ","chho": "ཅོ", # Note: These likely map to 'ch' not 'chh'
+                "chi": "ཆི", "chu": "ཆུ", "che": "ཆེ", "cho": "ཆོ",
+                "jhi": " ",  "jhu": "ཇུ", "jhe": "ཇེ", "jho": "ཇོ",  # Note: 'jhi' was overwritten to be a space
+                "nyi": "ཉི", "nyu": "ཉུ", "nye": "ཉེ", "nyo": "ཉོ",
+                "ti": "ཏི",  "tu": "ཏུ",  "te": "ཏེ",  "to": "ཏོ",
+                "thi": "ཐི", "thu": "ཐུ", "the": "ཐེ", "tho": "ཐོ",
+                "di": "དི",  "du": "དུ",  "de": "དེ",  "do": "དོ",
+                "dhi": "དི", "dhu": "དུ", "dhe": "དེ", "dho": "དོ",
+                "ni": "ནི",  "nu": "ནུ",  "ne": "ནེ",  "no": "ནོ",
+                "pi": "པི",  "pu": "པུ",  "pe": "པེ",  "po": "པོ",
+                "phi": "ཕི", "phu": "ཕུ", "phe": "ཕེ", "pho": "ཕོ",
+                "bhi": "བི", "bhu": "བུ", "bhe": "བེ", "bho": "བོ",
+                "mi": "མི",  "mu": "མུ",  "me": "མེ",  "mo": "མོ",
+                "tsi": "ཚི", "tsu": "ཚུ", "tse": "ཚེ", "tso": "ཚོ",  # Note: Overwrites 'tzi', 'tzu', etc.
+                "zi": "ཛི ", "zu": "ཛུ",  "ze": "ཛེ",  "zo": "ཛོ",
+                "zhi": "ཞི", "zhu": "ཞུ", "zhe": "ཞེ", "zho": "ཞོ",
+                "szi": "ཟི", "szu": "ཟུ", "sze": "ཟེ", "szo": "ཟོ",
+                "wi": "ཝི",  "wu": "ཝུ",  "we": "ཝེ",  "wo": "ཝོ",
+                "yi": "ཡི",  "yu": "ཡུ",  "ye": "ཡེ",  "yo": "ཡོ",
+                "ri": "རི",  "ru": "རུ",  "re": "རེ",  "ro": "རོ",
+                "li": "ལི",  "lu": "ལུ",  "le": "ལེ",  "lo": "ལོ",
+                "shi": "ཤི", "shu": "ཤུ", "she": "ཤེ", "sho": "ཤོ",
+                "si": "སི",  "su": "སུ",  "se": "སེ",  "so": "སོ",
+                "hi": "ཧི",  "hu": "ཧུ",  "he": "ཧེ",
+                "i": "ཨི",   "u": "ཨུ",   "e": "ཨེ",   "o": "ཨོ",    # Note: 'e' and 'o' were overwritten
+
+                # Subjoined 'ya' ('yatak')
+                "kya": "ཀྱ",  "kyi": "ཀྱི", "kyu": "ཀྱུ", "kye": "ཀྱེ", "kyo": "ཀྱོ",
+                "khya": "ཁྱ", "khyi": "ཁྱི", "khyu": "ཁྱུ", "khye": "ཁྱེ", "khy": "ཁྱི",
+                "gya": "གྱ",  "gyi": "གྱི", "ghyi": "གྱི", "gyu": "གྱུ", "gye": "གྱེ", "gyo": "གྱོ",
                 
-    return state
+                # Note: The following yatak entries from the Java code all mapped to 'ཨི' or were overwritten.
+                # This is likely an error in the original data, but the behavior is replicated.
+                "chya": "ཨི", "chyi": "ཨི", "chyu": "ཨི", "chye": "ཨི", "chyo": "ཨི",
+                "jhya": "ཨི", "jhyi": "ཨི", "jhyu": "ཨི", "jhye": "ཨི", "jhyo": "ཨི",
+                "mya": "ཨི",  "myi": "ཨི",  "myu": "ཨི",  "mye": "ཨི",  "myo": "ཨི",
+                # 'nya', 'nyi', 'nyu', 'nye', 'nyo' are also overwritten here in the original Java code
+}
+# Get the keys and sort them by length, descending.
+# This ensures "kha" is matched before "k", "ng" before "n", etc.
+SORTED_KEYS = sorted(TIBETAN_MAP.keys(), key=len, reverse=True)
 
-
-def transliterate_stateful(text, state):
-    # --- Detect what happened: typing, deleting, or clearing ---
-    prev_text = state.get('prev_text', '')
+def transliterate(roman_string):
+    """
+    Transliterates a Romanized (Wylie-style) string into Tibetan script.
+    """
+    # Normalize input to lowercase to match the map keys
+    roman_string = roman_string.lower()
     
-    # 1. Text was cleared or a large chunk was deleted/pasted
-    if abs(len(text) - len(prev_text)) > 1 or (text == "" and prev_text != ""):
-        # The state machine can't handle this gracefully, so we reset everything.
-        new_state = {'prev_text': text, 'tibetan_output': '', 'current_stack': '', 'is_waiting': False}
-        temp_output = ""
-        i = 0
-        sorted_keys = sorted(TIBETAN_MAP.keys(), key=len, reverse=True)
-        while i < len(text):
-            if text[i] == ' ':
-                temp_output += "་"
-                i += 1
-                continue
-            found = False
-            for key in sorted_keys:
-                if text.startswith(key, i):
-                    temp_output += TIBETAN_MAP[key]
-                    i += len(key)
-                    found = True
-                    break
-            if not found: i+=1
-        new_state['tibetan_output'] = temp_output
-        return temp_output, new_state
-        
-    # 2. Backspace was pressed
-    elif len(text) < len(prev_text):
-        # We effectively "replay" the whole input string to rebuild the state.
-        state = {'prev_text': '', 'tibetan_output': '', 'current_stack': '', 'is_waiting': False}
-        for char in text:
-            state = process_character(state, char)
-    
-    # 3. A single character was typed
-    else:
-        new_char = text[-1]
-        
-        if new_char == ' ':
-            # Space finalizes the current stack and adds a tsheg '་'
-            if state['current_stack'] in TIBETAN_MAP:
-                state['tibetan_output'] += TIBETAN_MAP[state['current_stack']]
-            state['tibetan_output'] += "་"
-            state['current_stack'] = ""
-            state['is_waiting'] = False
-        else:
-            # Run the main logic loop for the new character
-            state = process_character(state, new_char.lower())
+    tibetan_output = ""
+    i = 0
+    while i < len(roman_string):
+        # Handle space, which indicates the end of a syllable
+        if roman_string[i] == ' ':
+            tibetan_output += "་" # Appends the 'tsheg' character
+            i += 1
+            continue
 
-    state['prev_text'] = text
-    # The final display is the transliterated output plus any unresolved letters in the stack
-    return state['tibetan_output'] + state['current_stack'], state
+        # Greedily find the longest matching key from our dictionary
+        match_found = False
+        for key in SORTED_KEYS:
+            if roman_string.startswith(key, i):
+                tibetan_output += TIBETAN_MAP[key]
+                i += len(key)
+                match_found = True
+                break
+        
+        # If no key was matched, skip the character and move on
+        if not match_found:
+            i += 1
+            
+    return tibetan_output
+
+def clear_text():
+    """Returns empty strings to clear the text boxes."""
+    return "", ""
 
 # --- Gradio Interface ---
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown(
         """
-        # Tibetan Transliteration (Stateful Logic) - 
-        This version mimics the original Java code's character-by-character logic. It maintains a state to decide what to do with each new keystroke.
-        - A **space** finalizes the current syllable.
-        - **Pasting or large deletions will reset the state.**
+        #  Tibetan Transliteration Tool 🏔️
+        Type Romanized Tibetan (Wylie style) in the box below and see the Tibetan script appear in real-time.
+        - Use a **space** to mark the end of a syllable (it will add a `་` tsheg).
+        - Examples: `bod`, `sangs rgyas`, `bkra shis bde legs`
         """
     )
-
-    # gr.State holds our "memory" between function calls.
-    # It's a dictionary containing all the state variables from the Java code.
-    app_state = gr.State({
-        'prev_text': '',          # To detect backspace/paste
-        'tibetan_output': '',     # The finalized Tibetan string
-        'current_stack': '',      # The current pending characters (like 'currentInput')
-        'is_waiting': False,      # The 'waitingForNextInput' flag
-    })
-
+    
     with gr.Row():
         roman_input = gr.Textbox(
             label="Roman Input (Wylie)",
-            placeholder="Type here, e.g., 'sangs rgyas'",
+            placeholder="Type here, e.g., 'om ma ni pad me hung'",
             lines=4
         )
         tibetan_output = gr.Textbox(
             label="Tibetan Script Output",
             interactive=False,
             lines=4,
-            rtl=True
+            rtl=True # Right-to-Left text direction for Tibetan
         )
 
-    # The 'change' event triggers our stateful function
+    clear_button = gr.Button("Clear")
+
+    # Event Handlers
     roman_input.change(
-        fn=transliterate_stateful,
-        inputs=[roman_input, app_state],
-        outputs=[tibetan_output, app_state]
+        fn=transliterate,
+        inputs=roman_input,
+        outputs=tibetan_output
     )
     
+    clear_button.click(
+        fn=clear_text,
+        inputs=None,
+        outputs=[roman_input, tibetan_output]
+    )
+    
+    gr.Markdown("---")
+    gr.Examples(
+        examples=[
+            "sangs rgyas",
+            "bod skad",
+            "rdo rje",
+            "karma",
+            "bkra shis bde legs"
+        ],
+        inputs=roman_input
+    )
+
 if __name__ == "__main__":
     demo.launch()
