@@ -1,3 +1,9 @@
+"Tibetan.java" WORKS BUT YOU CAN RUN "transliterators.py" IN GRADIO OR JUST 'python transliterators.py" FROM TERMINAL AND TRY WRITING IN ROMAN ENGLISH THAT PRONOUNCES TIBETAN LETTERS OR EVEN WRDS.
+
+SPACE BAR CAN BE USED AS DOT (Tsek)
+
+
+
 ---------------------------------------------------------------------------
 This is the project for Transliterating English letters of combination 
 of English letters to matching Tibetan letters with matching pronunciation 
@@ -13,3 +19,4 @@ PURPOSE OF PROJECT: Transliteration
 VERSION or DATE: idk
 HOW TO START THIS PROJECT: by coding
 AUTHORS: Tenzin Kalsang (remove the Author's', its a solo project)
+
