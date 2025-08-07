@@ -17,10 +17,10 @@ public class TibetanTransliterator {
         // Consonants + vowels
         // Consonants + Vowels
         map.put("ka", "ཀ");        map.put("kha", "ཁ");        map.put("gha", "ག");        map.put("nga", "ང");
-        map.put("ca", "ཅ");        map.put("cha", "ཆ");        map.put("ja", "ཇ");        map.put("jha", "ཇ");  
+        map.put("ca", "ཅ");        map.put("cha", "ཆ");        map.put("ja", "ཇ");        map.put("jha", "ཇ");   // same as 'ja'        map.put("nya", "ཉ");       
         map.put("ta", "ཏ");        map.put("tha", "ཐ");        map.put("dha", "ད");        map.put("na", "ན");       
-        map.put("pa", "པ");        map.put("pha", "ཕ");        map.put("ba", "བ");        map.put("bha", "བ");      
-        map.put("tza", "ཙ");        map.put("tsa", "ཚ");        map.put("za", "ཛ");        map.put("wa", "ཝ");
+        map.put("pa", "པ");        map.put("pha", "ཕ");        map.put("ba", "བ");        map.put("bha", "བ");   // same as 'ba'        map.put("ma", "མ");        
+        map.put("tza", "ཙ");	   map.put("tzsa", "ཙ");       map.put("tsza", "ཙ");      map.put("tssa", "ཙ"); 	map.put("tsa", "ཚ");        map.put("za", "ཛ");        map.put("wa", "ཝ");
         map.put("zha", "ཞ");        map.put("sza", "ཟ");        map.put("ya", "ཡ");        map.put("ra", "ར");
         map.put("la", "ལ");        map.put("sha", "ཤ");        map.put("sa", "ས");
         map.put("ha", "ཧ");        map.put("a", "ཨ");
@@ -66,7 +66,12 @@ public class TibetanTransliterator {
         map.put("bhi", "བི");        map.put("bhu", "བུ");        map.put("bhe", "བེ");        map.put("bho", "བོ");
 
         map.put("mi", "མི");        map.put("mu", "མུ");        map.put("me", "མེ");        map.put("mo", "མོ");
-
+	
+	map.put("tssi", "ཙི");        map.put("tssu", "ཙུ");        map.put("tsse", "ཙེ");        map.put("tsso", "ཙོ");
+	map.put("tzi", "ཙི");        map.put("tzu", "ཙུ");        map.put("tze", "ཙེ");        map.put("tzo", "ཙོ");
+	map.put("tzsi", "ཙི");        map.put("tzsu", "ཙུ");        map.put("tzse", "ཙེ");        map.put("tzso", "ཙོ");
+	map.put("tszi", "ཙི");        map.put("tszu", "ཙུ");        map.put("tsze", "ཙེ");        map.put("tszo", "ཙོ");
+	
         map.put("tsi", "ཚི");        map.put("tsu", "ཚུ");        map.put("tse", "ཚེ");        map.put("tso", "ཚོ");
 
         map.put("zi", "ཛི ");        map.put("zu", "ཛུ");        map.put("ze", "ཛེ");        map.put("zo", "ཛོ");
@@ -87,7 +92,7 @@ public class TibetanTransliterator {
 
         map.put("si", "སི");        map.put("su", "སུ");        map.put("se", "སེ");        map.put("so", "སོ");
 
-        map.put("hi", "ཧི");        map.put("hu", "ཧུ");        map.put("he", "ཧེ");	map.put("o", "ཧོ");
+        map.put("hi", "ཧི");        map.put("hu", "ཧུ");        map.put("he", "ཧེ");	map.put("ho", "ཧོ");
 
         map.put("i", "ཨི");        map.put("u", "ཨུ");        map.put("e", "ཨེ");        map.put("o", "ཨོ");
 
@@ -100,7 +105,7 @@ public class TibetanTransliterator {
         map.put("chhya", "པྱ");		map.put("chhyi", "པྱི");		map.put("chhyu", "པྱུ");		map.put("chhye", "པྱེ");		map.put("chhyo", "པྱོ");  	
         map.put("chya", "ཕྱ");		map.put("chyi", "ཕྱི");		map.put("chyu", "ཕྱུ"); 		map.put("chye", "ཕྱེ");		map.put("chyo", "ཕྱོ");
 	map.put("jhya", "བྱ"); 		map.put("jhyi", "བྱི");		map.put("jhyu", "བྱུ");		map.put("jhye", "བྱེ");		map.put("jhyo", "བྱོ");
-	map.put("nya", "མྱ");		map.put("nyi", "མྱི");		map.put("nyu", "མྱུ");		map.put("nye", "མྱེ");		map.put("nyo", "མྱོ");
+	map.put("nyya", "མྱ");		map.put("nyyi", "མྱི");		map.put("nyyu", "མྱུ");		map.put("nyye", "མྱེ");		map.put("nyyo", "མྱོ");
 	
 	
         return map;
@@ -117,6 +122,7 @@ public class TibetanTransliterator {
         while (i < lower.length()) {
             char currentChar = lower.charAt(i);
 
+            // Handle space => tsheg character (་)
             if (currentChar == ' ') {
                 tibetanOutput.append('་'); 
                 i++;
@@ -141,6 +147,4 @@ public class TibetanTransliterator {
 
         return tibetanOutput.toString();
     }
-
 }
-
