@@ -17,6 +17,7 @@ TIBETAN_MAP = {
     "g": "ག",    "ng": "ང",    "n": "ན",    "b": "བ",
     "aa": "འ",   "m": "མ",     "l": "ལ",    "r": "ར",
     "s": "ས",    "p": "པ",     "k": "ག",    "dh": "ད",
+    "e": "ད",    "d": "ད",
 
     #vowel diacritics(applied to consonants)
     "ki": "ཀི",   "ku": "ཀུ",   "ke": "ཀེ",   "ko": "ཀོ",
@@ -65,6 +66,12 @@ TIBETAN_MAP = {
     "chya": "ཕྱ",  "chyi": "ཕྱི",  "chyu": "ཕྱུ",  "chye": "ཕྱེ",  "chyo": "ཕྱོ",
     "jhya": "བྱ",  "jhyi": "བྱི",  "jhyu": "བྱུ",  "jhye": "བྱེ",  "jhyo": "བྱོ",
     "nyya": "མྱ", "nyyi": "མྱི", "nyyu": "མྱུ", "nyye": "མྱེ", "nyyo": "མྱོ",
+
+############################################################################################################################################################################################################################################################################
+##########################################################################3NUMBERS##########################################################################################################################################################################################
+	"1": "༡",	"2": "༢",	"3": "༣",	"4": "༤",	"5": "༥",	"6": "༦",	"7": "༧",	"8": "༨",	"8": "༩",	"0": "༠",  
+############################################################################################################################################################################################################################################################################
+      ".": "།",
 }
 
 # NEW: Dictionary for full word suggestions
@@ -90,45 +97,52 @@ SORTED_KEYS = sorted(TIBETAN_MAP.keys(), key=len, reverse=True)
 MAX_SUGGESTIONS = 5 #max number of suggestions to show
 
 def transliterate(roman_string):
-    """
-    Transliterates a Romanized (Wylie-style) string into Tibetan script,
-    with conditional logic for standalone vowels.
-    """
     roman_string = roman_string.lower()
     tibetan_output = ""
     i = 0
-    while i < len(roman_string):
+    length = len(roman_string)
+
+    while i < length:
         if roman_string[i] == ' ':
-            tibetan_output += "་" # Appends the 'tsheg' character
+            tibetan_output += "་"  # Tseg syllable delimiter
             i += 1
             continue
 
         match_found = False
         for key in SORTED_KEYS:
             if roman_string.startswith(key, i):
-                #check if the key is a standalone vowel.
-                is_standalone_vowel = key in ('a', 'e', 'i', 'o', 'u')
-                
-                if is_standalone_vowel:
-                    #check if the vowel is in a valid position.
-                    is_at_start = (i == 0)
-                    is_after_space = (i > 0 and roman_string[i-1] == ' ')
-                    
-                    #if it's a standalone vowel but no tat the start or after a space we skip its conversion
-                    if not (is_at_start or is_after_space):
-                        i += len(key) # Move the pointer forward
+                # Your special handling for single 'e'
+                if key == 'e':
+                    next_pos = i + len(key)
+                    # If 'e' is **at the end of the input** OR
+                    # **the next character is a space** (i.e., end of syllable)
+                    if next_pos == length or (next_pos < length and roman_string[next_pos] == ' '):
+                        # Transliterate 'e' as the special suffix letter dha
+                        tibetan_output += "ད"
+                        i += len(key)
                         match_found = True
                         break
-                #if logic pass then perform the normal transliteration.
-                tibetan_output += TIBETAN_MAP[key]
-                i += len(key)
-                match_found = True
-                break
-        
+                    else:
+                        #otherwise transliterate as vowel diacritic or ignore standalone 'e'
+                        #we can either skip or add TIBETAN_MAP.get('e', '') if mapped correctly,
+                        #butt often 'e' alone inside word is part of combos like 'de'
+                        #skip if no standalone mapping:
+                        i += len(key)
+                        match_found = True
+                        break
+
+                else:
+                    #all other keys behave normally
+                    tibetan_output += TIBETAN_MAP[key]
+                    i += len(key)
+                    match_found = True
+                    break
+
         if not match_found:
-            i += 1
-            
+            i += 1 #skip unknown characters
+
     return tibetan_output
+
 
 #function to get word suggestions
 def get_suggestions(current_input):
@@ -182,12 +196,11 @@ def update_input_with_suggestion(current_input, suggestion_clicked):
     """
     Replaces the last typed word with the full suggestion.
     """
-    # The suggestion text includes Tibetan, so we extract just the Wylie part
-    wylie_suggestion = suggestion_clicked.split(' ')[0]
+    suggestion = suggestion_clicked.split(' ')[0]
     
     parts = current_input.split(' ')
     # Replace the last part with the full suggestion and add a space
-    new_input = ' '.join(parts[:-1] + [wylie_suggestion]) + ' '
+    new_input = ' '.join(parts[:-1] + [suggestion]) + ' '
     return new_input
 
 def clear_all():
