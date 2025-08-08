@@ -1,223 +1,236 @@
 import java.util.*;
 
-public class TibetanRefined {
+public class TibetanTransliterator {
+    
+    // Fill in your Tibetan Map here (copy all from Python dict)
+    private static final Map<String, String> TIBETAN_MAP = new HashMap<>();
+   static {
+    TIBETAN_MAP.put("ka", "ཀ");    TIBETAN_MAP.put("kha", "ཁ");    TIBETAN_MAP.put("gha", "ག");    TIBETAN_MAP.put("nga", "ང");
+    TIBETAN_MAP.put("ca", "ཅ");    TIBETAN_MAP.put("cha", "ཆ");    TIBETAN_MAP.put("ja", "ཇ");    TIBETAN_MAP.put("jha", "ཇ");
+    TIBETAN_MAP.put("nya", "ཉ");    TIBETAN_MAP.put("ta", "ཏ");    TIBETAN_MAP.put("tha", "ཐ");    TIBETAN_MAP.put("dha", "ད");
+    TIBETAN_MAP.put("na", "ན");    TIBETAN_MAP.put("pa", "པ");    TIBETAN_MAP.put("pha", "ཕ");    TIBETAN_MAP.put("ba", "བ");    TIBETAN_MAP.put("wa", "བ");    TIBETAN_MAP.put("bha", "བ");    TIBETAN_MAP.put("ma", "མ");
+    TIBETAN_MAP.put("tza", "ཙ");    TIBETAN_MAP.put("tzsa", "ཙ");    TIBETAN_MAP.put("tsza", "ཙ");    TIBETAN_MAP.put("tssa", "ཙ");    TIBETAN_MAP.put("tsa", "ཚ");    TIBETAN_MAP.put("za", "ཛ");    TIBETAN_MAP.put("wwa", "ཝ");    TIBETAN_MAP.put("waa", "ཝ");
+    TIBETAN_MAP.put("zha", "ཞ");    TIBETAN_MAP.put("sza", "ཟ");    TIBETAN_MAP.put("ya", "ཡ");    TIBETAN_MAP.put("ra", "ར");
+    TIBETAN_MAP.put("la", "ལ");    TIBETAN_MAP.put("sha", "ཤ");    TIBETAN_MAP.put("sa", "ས");    TIBETAN_MAP.put("ha", "ཧ");
+    TIBETAN_MAP.put("a", "ཨ");    
+    
+    TIBETAN_MAP.put("g", "ག");    TIBETAN_MAP.put("ng", "ང");    TIBETAN_MAP.put("n", "ན");    TIBETAN_MAP.put("b", "བ");    TIBETAN_MAP.put("aa", "འ");    TIBETAN_MAP.put("m", "མ");    TIBETAN_MAP.put("l", "ལ");
+    TIBETAN_MAP.put("r", "ར");    TIBETAN_MAP.put("s", "ས");    TIBETAN_MAP.put("p", "པ");    TIBETAN_MAP.put("k", "ག");    TIBETAN_MAP.put("dh", "ད");    TIBETAN_MAP.put("e", "ཨེ");    TIBETAN_MAP.put("d", "ད");
+    
+    
+    TIBETAN_MAP.put("ki", "ཀི");    TIBETAN_MAP.put("ku", "ཀུ");    TIBETAN_MAP.put("ke", "ཀེ");    TIBETAN_MAP.put("ko", "ཀོ");
+    TIBETAN_MAP.put("khi", "ཁི");    TIBETAN_MAP.put("khu", "ཁུ");    TIBETAN_MAP.put("khe", "ཁེ");    TIBETAN_MAP.put("kho", "ཁོ");
+    TIBETAN_MAP.put("gi", "གི");    TIBETAN_MAP.put("gu", "གུ");    TIBETAN_MAP.put("ge", "གེ");    TIBETAN_MAP.put("go", "གོ");    TIBETAN_MAP.put("ghi", "གི");    TIBETAN_MAP.put("ghu", "གུ");    TIBETAN_MAP.put("ghe", "གེ");    TIBETAN_MAP.put("gho", "གོ");
+    TIBETAN_MAP.put("ngi", "ངི");    TIBETAN_MAP.put("ngu", "ངུ");    TIBETAN_MAP.put("nge", "ངེ");    TIBETAN_MAP.put("ngo", "ངོ");
+    TIBETAN_MAP.put("chhi", "ཅི");    TIBETAN_MAP.put("chhu", "ཅུ");    TIBETAN_MAP.put("chhe", "ཅེ");    TIBETAN_MAP.put("chho", "ཅོ");
+    TIBETAN_MAP.put("chi", "ཆི");    TIBETAN_MAP.put("chu", "ཆུ");    TIBETAN_MAP.put("che", "ཆེ");    TIBETAN_MAP.put("cho", "ཆོ");
+    TIBETAN_MAP.put("jhi", "ཇི");    TIBETAN_MAP.put("jhu", "ཇུ");    TIBETAN_MAP.put("jhe", "ཇེ");    TIBETAN_MAP.put("jho", "ཇོ");
+    TIBETAN_MAP.put("nyi", "ཉི");    TIBETAN_MAP.put("nyu", "ཉུ");    TIBETAN_MAP.put("nye", "ཉེ");    TIBETAN_MAP.put("nyo", "ཉོ");
+    TIBETAN_MAP.put("ti", "ཏི");    TIBETAN_MAP.put("tu", "ཏུ");    TIBETAN_MAP.put("te", "ཏེ");    TIBETAN_MAP.put("to", "ཏོ");
+    TIBETAN_MAP.put("thi", "ཐི");    TIBETAN_MAP.put("thu", "ཐུ");    TIBETAN_MAP.put("the", "ཐེ");    TIBETAN_MAP.put("tho", "ཐོ");    
+    TIBETAN_MAP.put("di", "གྲི");    TIBETAN_MAP.put("du", "གྲུ");    TIBETAN_MAP.put("de", "གྲེ");    TIBETAN_MAP.put("do", "གྲོ");
+    TIBETAN_MAP.put("dhi", "དི");    TIBETAN_MAP.put("dhu", "དུ");    TIBETAN_MAP.put("dhe", "དེ");    TIBETAN_MAP.put("dho", "དོ");
+    TIBETAN_MAP.put("ni", "ནི");    TIBETAN_MAP.put("nu", "ནུ");    TIBETAN_MAP.put("ne", "ནེ");    TIBETAN_MAP.put("no", "ནོ");
+    TIBETAN_MAP.put("pi", "པི");    TIBETAN_MAP.put("pu", "པུ");    TIBETAN_MAP.put("pe", "པེ");    TIBETAN_MAP.put("po", "པོ");
+    TIBETAN_MAP.put("phi", "ཕི");    TIBETAN_MAP.put("phu", "ཕུ");    TIBETAN_MAP.put("phe", "ཕེ");    TIBETAN_MAP.put("pho", "ཕོ");
+    TIBETAN_MAP.put("bhi", "བི");    TIBETAN_MAP.put("bhu", "བུ");    TIBETAN_MAP.put("bhe", "བེ");    TIBETAN_MAP.put("bho", "བོ");
+    TIBETAN_MAP.put("mi", "མི");    TIBETAN_MAP.put("mu", "མུ");    TIBETAN_MAP.put("me", "མེ");    TIBETAN_MAP.put("mo", "མོ");
+    TIBETAN_MAP.put("tzi", "ཙི");    TIBETAN_MAP.put("tzu", "ཙུ");    TIBETAN_MAP.put("tze", "ཙེ");    TIBETAN_MAP.put("tzo", "ཙོ");
+    TIBETAN_MAP.put("tssi", "ཙི");    TIBETAN_MAP.put("tssu", "ཙུ");    TIBETAN_MAP.put("tsse", "ཙེ");    TIBETAN_MAP.put("tsso", "ཙོ");
+    TIBETAN_MAP.put("tzsi", "ཙི");    TIBETAN_MAP.put("tzsu", "ཙུ");    TIBETAN_MAP.put("tzse", "ཙེ");    TIBETAN_MAP.put("tzso", "ཙོ");    TIBETAN_MAP.put("tszi", "ཙི");    TIBETAN_MAP.put("tszu", "ཙུ");    TIBETAN_MAP.put("tsze", "ཙེ");    TIBETAN_MAP.put("tszo", "ཙོ");
+    TIBETAN_MAP.put("tsi", "ཚི");    TIBETAN_MAP.put("tsu", "ཚུ");    TIBETAN_MAP.put("tse", "ཚེ");    TIBETAN_MAP.put("tso", "ཚོ");
+    TIBETAN_MAP.put("zi", "ཛི ");    TIBETAN_MAP.put("zu", "ཛུ");    TIBETAN_MAP.put("ze", "ཛེ");    TIBETAN_MAP.put("zo", "ཛོ");
+    TIBETAN_MAP.put("zhi", "ཞི");    TIBETAN_MAP.put("zhu", "ཞུ");    TIBETAN_MAP.put("zhe", "ཞེ");    TIBETAN_MAP.put("zho", "ཞོ");
+    TIBETAN_MAP.put("szi", "ཟི");    TIBETAN_MAP.put("szu", "ཟུ");    TIBETAN_MAP.put("sze", "ཟེ");    TIBETAN_MAP.put("szo", "ཟོ");
+    TIBETAN_MAP.put("wi", "ཝི");    TIBETAN_MAP.put("wu", "ཝུ");    TIBETAN_MAP.put("we", "ཝེ");    TIBETAN_MAP.put("wo", "ཝོ");
+    TIBETAN_MAP.put("yi", "ཡི");    TIBETAN_MAP.put("yu", "ཡུ");    TIBETAN_MAP.put("ye", "ཡེ");    TIBETAN_MAP.put("yo", "ཡོ");
+    TIBETAN_MAP.put("ri", "རི");    TIBETAN_MAP.put("ru", "རུ");    TIBETAN_MAP.put("re", "རེ");    TIBETAN_MAP.put("ro", "རོ");
+    TIBETAN_MAP.put("li", "ལི");    TIBETAN_MAP.put("lu", "ལུ");    TIBETAN_MAP.put("le", "ལེ");    TIBETAN_MAP.put("lo", "ལོ");
+    TIBETAN_MAP.put("shi", "ཤི");    TIBETAN_MAP.put("shu", "ཤུ");    TIBETAN_MAP.put("she", "ཤེ");    TIBETAN_MAP.put("sho", "ཤོ");
+    TIBETAN_MAP.put("si", "སི");    TIBETAN_MAP.put("su", "སུ");    TIBETAN_MAP.put("se", "སེ");    TIBETAN_MAP.put("so", "སོ");
+    TIBETAN_MAP.put("hi", "ཧི");    TIBETAN_MAP.put("hu", "ཧུ");    TIBETAN_MAP.put("he", "ཧེ");    TIBETAN_MAP.put("ho", "ཧོ");
+    TIBETAN_MAP.put("i", "ཨི");    TIBETAN_MAP.put("u", "ཨུ");    TIBETAN_MAP.put("e", "ཨེ");    TIBETAN_MAP.put("o", "ཨོ");
 
-    // Encapsulates all transliteration logic
-    static class TransliterationEngine {
-        private final Map<String, String> tibetanMap = new HashMap<>();
-        private final Set<String> endingLetters = new HashSet<>(Arrays.asList(
-                "g", "ng", "n", "b", "m", "r", "l", "s", "p", "k", "dh"
-        ));
-        private final StringBuilder stack = new StringBuilder();
+    TIBETAN_MAP.put("tra", "ཀྲ");    TIBETAN_MAP.put("tta", "ཁྲ");    TIBETAN_MAP.put("tda", "ཁྲ");    TIBETAN_MAP.put("da", "གྲ");
+    TIBETAN_MAP.put("dra", "དྲ");    TIBETAN_MAP.put("ssa", "སྲ");    TIBETAN_MAP.put("sra", "སྲ");    TIBETAN_MAP.put("nra", "ནྲ");
+    TIBETAN_MAP.put("thra", "ཐྲ");    TIBETAN_MAP.put("hra", "ཧྲ");    
+    TIBETAN_MAP.put("tri", "ཀྲི");    TIBETAN_MAP.put("tru", "ཀྲུ");    TIBETAN_MAP.put("tre", "ཀྲེ");    TIBETAN_MAP.put("tro", "ཀྲོ");
+    TIBETAN_MAP.put("tdri", "ཁྲི");    TIBETAN_MAP.put("tdru", "ཁྲུ");    TIBETAN_MAP.put("tdre", "ཁྲེ");    TIBETAN_MAP.put("tdro", "ཁྲོ");    
+    TIBETAN_MAP.put("dri", "དྲི");    TIBETAN_MAP.put("dru", "དྲུ");    TIBETAN_MAP.put("dre", "དྲེ");    TIBETAN_MAP.put("dro", "དྲོ");    TIBETAN_MAP.put("ddi", "དྲི");    TIBETAN_MAP.put("ddu", "དྲུ");    TIBETAN_MAP.put("dde", "དྲེ");    TIBETAN_MAP.put("ddo", "དྲོ");
+    TIBETAN_MAP.put("ssi", "སྲི");    TIBETAN_MAP.put("ssu", "སྲུ");    TIBETAN_MAP.put("sse", "སྲེ");    TIBETAN_MAP.put("sso", "སྲོ");
+    TIBETAN_MAP.put("hri", "ཧྲི");    TIBETAN_MAP.put("hru", "ཧྲུ");    TIBETAN_MAP.put("hre", "ཧྲེ");    TIBETAN_MAP.put("hro", "ཧྲོ");
 
-        public TransliterationEngine() {
-            initializeMap();
-        }
+    TIBETAN_MAP.put("1", "༡");
+    TIBETAN_MAP.put("2", "༢");
+    TIBETAN_MAP.put("3", "༣");
+    TIBETAN_MAP.put("4", "༤");
+    TIBETAN_MAP.put("5", "༥");
+    TIBETAN_MAP.put("6", "༦");
+    TIBETAN_MAP.put("7", "༧");
+    TIBETAN_MAP.put("8", "༨");
+    TIBETAN_MAP.put("9", "༩");
+    TIBETAN_MAP.put("0", "༠");
+}
 
-        private void initializeMap() {
-            // Your map initialization remains the same...
-            tibetanMap.put("e", "ད");
-        tibetanMap.put("ka", "ཀ");        tibetanMap.put("kha", "ཁ");        tibetanMap.put("gha", "ག");       tibetanMap.put("nga", "ང");        
-        tibetanMap.put("ca", "ཅ");        tibetanMap.put("cha", "ཆ");        tibetanMap.put("ja", "ཇ");        tibetanMap.put("jha", "ཇ");        tibetanMap.put("nya", "ཉ");
-        tibetanMap.put("ta", "ཏ");        tibetanMap.put("tha", "ཐ");        tibetanMap.put("dha", "ད");       tibetanMap.put("dh", "ད");         tibetanMap.put("na", "ན");
-        tibetanMap.put("pa", "པ");        tibetanMap.put("pha", "ཕ");        tibetanMap.put("ba", "བ");        tibetanMap.put("bha", "བ");        tibetanMap.put("ma", "མ");
-        tibetanMap.put("tza", "ཙ");       tibetanMap.put("tsa", "ཚ");        tibetanMap.put("za", "ཛ");        tibetanMap.put("wa", "ཝ");         tibetanMap.put("zha", "ཞ");
-        tibetanMap.put("sza", "ཟ");       tibetanMap.put("ya", "ཡ");         tibetanMap.put("ra", "ར");        tibetanMap.put("la", "ལ");         tibetanMap.put("sha", "ཤ");
-        tibetanMap.put("sa", "ས");        tibetanMap.put("ha", "ཧ");         tibetanMap.put("a", "ཨ");        
-        //jejug chuu
-        tibetanMap.put("g", "ག");        tibetanMap.put("ng", "ང");        tibetanMap.put("n", "ན");        tibetanMap.put("b", "བ");        tibetanMap.put("aa", "འ");
-        tibetanMap.put("m", "མ");        tibetanMap.put("l", "ལ");        tibetanMap.put("r", "ར");        tibetanMap.put("s", "ས");        tibetanMap.put("p", "པ");
-        tibetanMap.put("k", "ག");
-        // i u e o ི ུ ེ ོ
-        tibetanMap.put("ki", "ཀི");    tibetanMap.put("ku", "ཀུ");    tibetanMap.put("ke", "ཀེ");    tibetanMap.put("ko", "ཀོ");    
-        tibetanMap.put("khi", "ཁི");    tibetanMap.put("khu", "ཁུ");    tibetanMap.put("khe", "ཁེ");    tibetanMap.put("kho", "ཁོ");
-        tibetanMap.put("gi", "གི");    tibetanMap.put("gu", "གུ");    tibetanMap.put("ge", "གེ");    tibetanMap.put("go", "གོ");
-        tibetanMap.put("ghi", "གི");    tibetanMap.put("ghu", "གུ");    tibetanMap.put("ghe", "གེ");    tibetanMap.put("gho", "གོ");
-        tibetanMap.put("ngi", "ངི");    tibetanMap.put("ngu", "ངུ");    tibetanMap.put("nge", "ངེ");    tibetanMap.put("ngo", "ངོ");
-        tibetanMap.put("chhi", "ཅི");    tibetanMap.put("chhu", "ཅུ");    tibetanMap.put("chhe", "ཅེ");    tibetanMap.put("chho", "ཅོ");
-        tibetanMap.put("chi", "ཆི");    tibetanMap.put("chu", "ཆུ");    tibetanMap.put("che", "ཆེ");    tibetanMap.put("cho", "ཆོ");
-        tibetanMap.put("jhi", "ཇི");    tibetanMap.put("jhu", "ཇུ");    tibetanMap.put("jhe", "ཇེ");    tibetanMap.put("jho", "ཇོ");
-        tibetanMap.put("nyi", "ཉི");    tibetanMap.put("nyu", "ཉུ");    tibetanMap.put("nye", "ཉེ");    tibetanMap.put("nyo", "ཉོ");
-        tibetanMap.put("ti", "ཏི");     tibetanMap.put("tu", "ཏུ");     tibetanMap.put("te", "ཏེ");     tibetanMap.put("to", "ཏོ");
-        tibetanMap.put("thi", "ཐི");    tibetanMap.put("thu", "ཐུ");    tibetanMap.put("the", "ཐེ");    tibetanMap.put("tho", "ཐོ");
-        tibetanMap.put("di", "དི");    tibetanMap.put("du", "དུ");    tibetanMap.put("de", "དེ");    tibetanMap.put("do", "དོ");
-        tibetanMap.put("dhi", "དི");    tibetanMap.put("dhu", "དུ");    tibetanMap.put("dhe", "དེ");    tibetanMap.put("dho", "དོ");
-        tibetanMap.put("ni", "ནི");     tibetanMap.put("nu", "ནུ");     tibetanMap.put("ne", "ནེ");     tibetanMap.put("no", "ནོ");
-        tibetanMap.put("pi", "པི");     tibetanMap.put("pu", "པུ");     tibetanMap.put("pe", "པེ");     tibetanMap.put("po", "པོ");
-        tibetanMap.put("phi", "ཕི");    tibetanMap.put("phu", "ཕུ");    tibetanMap.put("phe", "ཕེ");    tibetanMap.put("pho", "ཕོ");
-        tibetanMap.put("bhi", "བི");    tibetanMap.put("bhu", "བུ");    tibetanMap.put("bhe", "བེ");    tibetanMap.put("bho", "བོ");
-        tibetanMap.put("mi", "མི");     tibetanMap.put("mu", "མུ");     tibetanMap.put("me", "མེ");     tibetanMap.put("mo", "མོ");
-        tibetanMap.put("tsi", "ཙི");    tibetanMap.put("tsu", "ཙུ");    tibetanMap.put("tse", "ཙེ");    tibetanMap.put("tso", "ཙོ");
-        tibetanMap.put("tsi", "ཚི");    tibetanMap.put("tsu", "ཚུ");    tibetanMap.put("tse", "ཚེ");    tibetanMap.put("tso", "ཚོ");
-        tibetanMap.put("zi", "ཛི ");     tibetanMap.put("zu", "ཛུ");     tibetanMap.put("ze", "ཛེ");     tibetanMap.put("zo", "ཛོ");
-        tibetanMap.put("zhi", "ཞི");    tibetanMap.put("zhu", "ཞུ");    tibetanMap.put("zhe", "ཞེ");    tibetanMap.put("zho", "ཞོ");
-        tibetanMap.put("szi", "ཟི");    tibetanMap.put("szu", "ཟུ");    tibetanMap.put("sze", "ཟེ");    tibetanMap.put("szo", "ཟོ");
-        tibetanMap.put("wi", "ཝི");     tibetanMap.put("wu", "ཝུ");     tibetanMap.put("we", "ཝེ");     tibetanMap.put("wo", "ཝོ");
-        tibetanMap.put("yi", "ཡི");     tibetanMap.put("yu", "ཡུ");    tibetanMap.put("ye", "ཡེ");    tibetanMap.put("yo", "ཡོ");
-        tibetanMap.put("ri", "རི");    tibetanMap.put("ru", "རུ");    tibetanMap.put("re", "རེ");    tibetanMap.put("ro", "རོ");
-        tibetanMap.put("li", "ལི");    tibetanMap.put("lu", "ལུ");    tibetanMap.put("le", "ལེ");    tibetanMap.put("lo", "ལོ");
-        tibetanMap.put("shi", "ཤི");   tibetanMap.put("shu", "ཤུ");   tibetanMap.put("she", "ཤེ");    tibetanMap.put("sho", "ཤོ");
-        tibetanMap.put("si", "སི");    tibetanMap.put("su", "སུ");    tibetanMap.put("se", "སེ");    tibetanMap.put("so", "སོ");
-        tibetanMap.put("hi", "ཧི");    tibetanMap.put("hu", "ཧུ");    tibetanMap.put("he", "ཧེ");        tibetanMap.put("o", "ཧོ");
-        tibetanMap.put("i", "ཨི");    tibetanMap.put("u", "ཨུ");    tibetanMap.put("e", "ཨེ");    tibetanMap.put("o", "ཨོ");
-        // yatak
-        tibetanMap.put("kya", "ཀྱ");    tibetanMap.put("kyi", "ཀྱི");   tibetanMap.put("kye", "ཀྱེ");   tibetanMap.put("kyu", "ཀྱུ");   tibetanMap.put("kyo", "ཀྱོ");
-        tibetanMap.put("khya", "ཁྱ");   tibetanMap.put("khyi", "ཁྱི");  tibetanMap.put("khyu", "ཁྱུ");  tibetanMap.put("khye", "ཁྱེ");  tibetanMap.put("khy", "ཁྱི");
-        tibetanMap.put("gya", "གྱ");    tibetanMap.put("gyi", "གྱི");   tibetanMap.put("ghyi", "གྱི");   tibetanMap.put("gye", "གྱེ");   tibetanMap.put("gyu", "གྱུ");   tibetanMap.put("gyo", "གྱོ");
-        tibetanMap.put("chya", "ཨི");    tibetanMap.put("chyi", "ཨི");  tibetanMap.put("chyu", "ཨི");  tibetanMap.put("chye", "ཨི");    tibetanMap.put("chyo", "ཨི");
-        tibetanMap.put("jhya", "ཨི");    tibetanMap.put("jhyi", "ཨི");  tibetanMap.put( "jhi", " ");   tibetanMap.put("jhyu", "ཨི");  tibetanMap.put("jhye", "ཨི");    tibetanMap.put("jhyo", "ཨི");
-        tibetanMap.put("mya", "ཨི");    tibetanMap.put("myi", "ཨི");  tibetanMap.put("myu", "ཨི");  tibetanMap.put("mye", "ཨི");    tibetanMap.put("myo", "ཨི");
-        tibetanMap.put("nya", "ཨི");    tibetanMap.put("nyi", "ཨི");  tibetanMap.put("nyu", "ཨི");  tibetanMap.put("nye", "ཨི");    tibetanMap.put("nyo", "ཨི");
-          /*  // Base Consonants and Vowels
-            tibetanMap.put("a", "ཨ"); tibetanMap.put("i", "ཨི"); tibetanMap.put("u", "ཨུ");
-            tibetanMap.put("e", "ཨེ"); tibetanMap.put("o", "ཨོ");
-
-            // Consonant + "a"
-            tibetanMap.put("ka", "ཀ"); tibetanMap.put("kha", "ཁ"); tibetanMap.put("ga", "ག"); tibetanMap.put("gha", "ག");
-            tibetanMap.put("nga", "ང"); tibetanMap.put("ca", "ཅ"); tibetanMap.put("cha", "ཆ"); tibetanMap.put("ja", "ཇ");
-            tibetanMap.put("jha", "ཇ"); tibetanMap.put("nya", "ཉ"); tibetanMap.put("ta", "ཏ"); tibetanMap.put("tha", "ཐ");
-            tibetanMap.put("da", "ད"); tibetanMap.put("dha", "ད"); tibetanMap.put("na", "ན"); tibetanMap.put("pa", "པ");
-            tibetanMap.put("pha", "ཕ"); tibetanMap.put("ba", "བ"); tibetanMap.put("bha", "བ"); tibetanMap.put("ma", "མ");
-            tibetanMap.put("tsa", "ཙ"); tibetanMap.put("tsha", "ཚ"); tibetanMap.put("dza", "ཛ"); tibetanMap.put("wa", "ཝ");
-            tibetanMap.put("zha", "ཞ"); tibetanMap.put("za", "ཟ"); tibetanMap.put("ya", "ཡ"); tibetanMap.put("ra", "ར");
-            tibetanMap.put("la", "ལ"); tibetanMap.put("sha", "ཤ"); tibetanMap.put("sa", "ས"); tibetanMap.put("ha", "ཧ");
-
-            // Consonant + Vowels
-            tibetanMap.put("ki", "ཀི"); tibetanMap.put("ku", "ཀུ"); tibetanMap.put("ke", "ཀེ"); tibetanMap.put("ko", "ཀོ");
-            tibetanMap.put("khi", "ཁི"); tibetanMap.put("khu", "ཁུ"); tibetanMap.put("khe", "ཁེ"); tibetanMap.put("kho", "ཁོ");
-            tibetanMap.put("gi", "གི"); tibetanMap.put("gu", "གུ"); tibetanMap.put("ge", "གེ"); tibetanMap.put("go", "གོ");
-            tibetanMap.put("ngi", "ངི"); tibetanMap.put("ngu", "ངུ"); tibetanMap.put("nge", "ངེ"); tibetanMap.put("ngo", "ངོ");
-            tibetanMap.put("chi", "ཆི"); tibetanMap.put("chu", "ཆུ"); tibetanMap.put("che", "ཆེ"); tibetanMap.put("cho", "ཆོ");
-            tibetanMap.put("nyi", "ཉི"); tibetanMap.put("nyu", "ཉུ"); tibetanMap.put("nye", "ཉེ"); tibetanMap.put("nyo", "ཉོ");
-            tibetanMap.put("ti", "ཏི"); tibetanMap.put("tu", "ཏུ"); tibetanMap.put("te", "ཏེ"); tibetanMap.put("to", "ཏོ");
-            tibetanMap.put("dhi", "དི"); tibetanMap.put("dhu", "དུ"); tibetanMap.put("dhe", "དེ"); tibetanMap.put("dho", "དོ");
-            tibetanMap.put("ni", "ནི"); tibetanMap.put("nu", "ནུ"); tibetanMap.put("ne", "ནེ"); tibetanMap.put("no", "ནོ");
-            tibetanMap.put("pi", "པི"); tibetanMap.put("pu", "པུ"); tibetanMap.put("pe", "པེ"); tibetanMap.put("po", "པོ");
-            tibetanMap.put("bhi", "བི"); tibetanMap.put("bhu", "བུ"); tibetanMap.put("bhe", "བེ"); tibetanMap.put("bho", "བོ");
-            tibetanMap.put("mi", "མི"); tibetanMap.put("mu", "མུ"); tibetanMap.put("me", "མེ"); tibetanMap.put("mo", "མོ");
-            tibetanMap.put("tsi", "ཙི"); tibetanMap.put("tsu", "ཙུ"); tibetanMap.put("tse", "ཙེ"); tibetanMap.put("tso", "ཙོ");
-            tibetanMap.put("zi", "ཛི"); tibetanMap.put("zu", "ཛུ"); tibetanMap.put("ze", "ཛེ"); tibetanMap.put("zo", "ཛོ");
-            tibetanMap.put("zhi", "ཞི"); tibetanMap.put("zhu", "ཞུ"); tibetanMap.put("zhe", "ཞེ"); tibetanMap.put("zho", "ཞོ");
-            tibetanMap.put("ri", "རི"); tibetanMap.put("ru", "རུ"); tibetanMap.put("re", "རེ"); tibetanMap.put("ro", "རོ");
-            tibetanMap.put("li", "ལི"); tibetanMap.put("lu", "ལུ"); tibetanMap.put("le", "ལེ"); tibetanMap.put("lo", "ལོ");
-            tibetanMap.put("si", "སི"); tibetanMap.put("su", "སུ"); tibetanMap.put("se", "སེ"); tibetanMap.put("so", "སོ");
-            tibetanMap.put("hi", "ཧི"); tibetanMap.put("hu", "ཧུ"); tibetanMap.put("he", "ཧེ"); tibetanMap.put("ho", "ཧོ");
-            tibetanMap.put("wi", "ཝི"); tibetanMap.put("wu", "ཝུ"); tibetanMap.put("we", "ཝེ"); tibetanMap.put("wo", "ཝོ");
-            tibetanMap.put("yi", "ཡི"); tibetanMap.put("yu", "ཡུ"); tibetanMap.put("ye", "ཡེ"); tibetanMap.put("yo", "ཡོ");
-            tibetanMap.put("dza", "ཛ"); tibetanMap.put("tsha", "ཚ"); tibetanMap.put("sza", "ཟ"); // Re-map some keys for clarity
-
-            // Yatak (ya-subscripts)
-            tibetanMap.put("kya", "ཀྱ"); tibetanMap.put("khya", "ཁྱ"); tibetanMap.put("gya", "གྱ"); tibetanMap.put("chya", "ཅྱ"); // example
-            tibetanMap.put("kye", "ཀྱེ"); tibetanMap.put("kyi", "ཀྱི"); tibetanMap.put("kyu", "ཀྱུ"); tibetanMap.put("kyo", "ཀྱོ");
-
-            // Jejugu (ending letters)
-            tibetanMap.put("g", "ག"); tibetanMap.put("ng", "ང"); tibetanMap.put("n", "ན"); tibetanMap.put("b", "བ");
-            tibetanMap.put("m", "མ"); tibetanMap.put("r", "ར"); tibetanMap.put("l", "ལ"); tibetanMap.put("s", "ས");
-            tibetanMap.put("k", "ག"); tibetanMap.put("p", "པ"); */
-        }
-
-        // Tries to get the longest possible match from the stack
-        public String getLongestMatch() {
-            String stackString = stack.toString();
-            for (int i = stackString.length(); i > 0; i--) {
-                String potentialMatch = stackString.substring(0, i);
-                if (tibetanMap.containsKey(potentialMatch)) {
-                    return potentialMatch;
-                }
-            }
-            return "";
-        }
-
-        // Adds a character to the stack
-        public void push(String input) {
-            stack.append(input);
-        }
-        
-        // *** NEW METHOD ***
-        // Handles the backspace operation on the stack
-        public void backspace() {
-            if (stack.length() > 0) {
-                stack.deleteCharAt(stack.length() - 1);
-            }
-        }
-
-        // Clears the stack
-        public void clearStack() {
-            stack.setLength(0);
-        }
-
-        public boolean isEndingLetter(String input) {
-            return endingLetters.contains(input);
-        }
-
-        public String getTibetan(String roman) {
-            return tibetanMap.get(roman);
-        }
-        
-        public int getStackLength() {
-            return stack.length();
-        }
-
-        public String getStack() {
-            return stack.toString();
-        }
+    private static final Map<String, String> TIBETAN_WORD_DICTIONARY = new LinkedHashMap<>();
+    static {
+        TIBETAN_WORD_DICTIONARY.put("sangs rgyas", "སངས་རྒྱས");
+        TIBETAN_WORD_DICTIONARY.put("bod skad", "བོད་སྐད");
+        TIBETAN_WORD_DICTIONARY.put("rdo rje", "རྡོ་རྗེ");
+        TIBETAN_WORD_DICTIONARY.put("karma", "ཀརྨ");
+        TIBETAN_WORD_DICTIONARY.put("bkra shis", "བཀྲ་ཤིས");
+        TIBETAN_WORD_DICTIONARY.put("bde legs", "བདེ་ལེགས");
+        TIBETAN_WORD_DICTIONARY.put("cho", "ཆོས");
+        TIBETAN_WORD_DICTIONARY.put("dharma", "དྷརྨ");
+        TIBETAN_WORD_DICTIONARY.put("thugs rje", "ཐུགས་རྗེ");
+        TIBETAN_WORD_DICTIONARY.put("nying rje", "སྙིང་རྗེ་");
+        TIBETAN_WORD_DICTIONARY.put("om", "ཨོཾ་");
+        TIBETAN_WORD_DICTIONARY.put("ma ni", "མ་ཎི་");
+        TIBETAN_WORD_DICTIONARY.put("pad me", "པདྨེ་");
+        TIBETAN_WORD_DICTIONARY.put("hung", "ཧཱུྃ་");
+        TIBETAN_WORD_DICTIONARY.put("de key", "བདེ་སྐྱིད་");
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        TransliterationEngine engine = new TransliterationEngine();
+    // Sorted keys for greedy matching (longest first)
+    private static final List<String> SORTED_KEYS;
+    static {
+        SORTED_KEYS = new ArrayList<>(TIBETAN_MAP.keySet());
+        SORTED_KEYS.sort((a, b) -> Integer.compare(b.length(), a.length()));  // descending length
+    }
+
+    private static final int MAX_SUGGESTIONS = 5;
+
+    public static String transliterate(String romanString) {
+        if (romanString == null) return "";
+        romanString = romanString.toLowerCase(Locale.ROOT);
+
         StringBuilder tibetanOutput = new StringBuilder();
+        int i = 0;
+        int length = romanString.length();
 
-        System.out.println("Start typing ('exit' to stop, 'space' to end syllable):");
-
-        while (true) {
-            System.out.print("> ");
-            String input = scanner.nextLine();
-
-            if ("exit".equals(input)) {
-                break;
-            } else if ("clear".equals(input)) {
-                engine.clearStack();
-                tibetanOutput.setLength(0);
-                System.out.println("Transliteration cleared.");
+        while (i < length) {
+            char currentChar = romanString.charAt(i);
+            
+            // Handle spaces as syllable delimiter
+            if (currentChar == ' ') {
+                tibetanOutput.append("་"); // Tsheg
+                i++;
                 continue;
-            } else if (" ".equals(input)) {
-                String match = engine.getLongestMatch();
-                if (!match.isEmpty()) {
-                    tibetanOutput.append(engine.getTibetan(match));
-                }
-                tibetanOutput.append("་"); // Append tsheg (dot)
-                engine.clearStack();
-            } else if ("backspace".equals(input)) {
-                // *** MODIFIED LOGIC ***
-                if (engine.getStackLength() > 0) {
-                    engine.backspace();
-                } else if (tibetanOutput.length() > 0) {
-                    tibetanOutput.deleteCharAt(tibetanOutput.length() - 1);
-                }
-            } else {
-                engine.push(input);
+            }
 
-                String stackContent = engine.getStack();
-                String longestMatch = engine.getLongestMatch();
-                
-                // *** SIMPLIFIED LOGIC ***
-                if (!longestMatch.isEmpty()) {
-                    String remaining = stackContent.substring(longestMatch.length());
-                    
-                    // If the remaining part is an ending letter, we commit the matched part
-                    // and keep the remainder on the stack for the next syllable part.
-                    if (engine.isEndingLetter(remaining)) {
-                        tibetanOutput.append(engine.getTibetan(longestMatch));
-                        engine.clearStack();
-                        engine.push(remaining);
+            // Handle period as Tibetan punctuation
+            if (currentChar == '.') {
+                tibetanOutput.append("།");
+                i++;
+                continue;
+            }
+
+            boolean matchFound = false;
+            for (String key : SORTED_KEYS) {
+                if (romanString.startsWith(key, i)) {
+                    // Special handling for single 'e' at syllable end
+                    if ("e".equals(key)) {
+                        int nextPos = i + key.length();
+                        if (nextPos == length || (nextPos < length && romanString.charAt(nextPos) == ' ')) {
+                            // Transliterate 'e' as special suffix letter dha
+                            tibetanOutput.append("ད");
+                            i += key.length();
+                            matchFound = true;
+                            break;
+                        } else {
+                            // Otherwise skip standalone 'e' or optionally transliterate as vowel diacritic if mapped
+                            i += key.length();
+                            matchFound = true;
+                            break;
+                        }
+                    } else {
+                        tibetanOutput.append(TIBETAN_MAP.get(key));
+                        i += key.length();
+                        matchFound = true;
+                        break;
                     }
                 }
             }
-            
-            System.out.println("Stack: " + engine.getStack());
-            System.out.println("Transliteration: " + tibetanOutput.toString());
+
+            if (!matchFound) {
+                // Skip unknown chars silently
+                i++;
+            }
         }
+
+        return tibetanOutput.toString();
+    }
+
+    public static List<String> getSuggestions(String currentInput) {
+        if (currentInput == null || currentInput.length() == 0 || currentInput.endsWith(" ")) {
+            return Collections.emptyList();
+        }
+
+        String[] parts = currentInput.split("\\s+");
+        String lastWord = parts[parts.length - 1].toLowerCase(Locale.ROOT);
+        if (lastWord.isEmpty()) return Collections.emptyList();
+
+        List<String> matches = new ArrayList<>();
+        for (String word : TIBETAN_WORD_DICTIONARY.keySet()) {
+            if (word.startsWith(lastWord)) {
+                matches.add(word);
+            }
+        }
+        return matches.size() > MAX_SUGGESTIONS ? matches.subList(0, MAX_SUGGESTIONS) : matches;
+    }
+
+    public static String updateInputWithSuggestion(String currentInput, String suggestionClicked) {
+        String wSuggestion = suggestionClicked.split(" ")[0];
+        String[] parts = currentInput.trim().split("\\s+");
+
+        if (parts.length == 0) {
+            return wSuggestion + " ";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < parts.length -1; i++) {
+            sb.append(parts[i]).append(" ");
+        }
+        sb.append(wSuggestion).append(" ");
+        return sb.toString();
+    }
+
+    // --- Simple command line demo ---
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Tibetan Transliteration Tool (Java Console)\nType 'exit' to quit.");
+        while (true) {
+            System.out.print("\nInput (Roman Tibetan): ");
+            String input = scanner.nextLine();
+            if ("exit".equalsIgnoreCase(input.trim())) {
+                break;
+            }
+
+            String transliterated = transliterate(input);
+            System.out.println("Tibetan Output: " + transliterated);
+
+            List<String> suggestions = getSuggestions(input);
+            if (!suggestions.isEmpty()) {
+                System.out.println("Suggestions:");
+                for (int i = 0; i < suggestions.size(); i++) {
+                    String sug = suggestions.get(i) + " (" + TIBETAN_WORD_DICTIONARY.get(suggestions.get(i)) + ")";
+                    System.out.println((i + 1) + ": " + sug);
+                }
+                System.out.print("Select suggestion number (or Enter to skip): ");
+                String sel = scanner.nextLine();
+                if (!sel.trim().isEmpty()) {
+                    try {
+                        int choice = Integer.parseInt(sel.trim()) - 1;
+                        if (choice >= 0 && choice < suggestions.size()) {
+                            String updatedInput = updateInputWithSuggestion(input, suggestions.get(choice));
+                            System.out.println("Updated input: " + updatedInput);
+                            System.out.println("Updated Tibetan output: " + transliterate(updatedInput));
+                        }
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
+        }
+        System.out.println("Goodbye Sayonara");
         scanner.close();
     }
 }
