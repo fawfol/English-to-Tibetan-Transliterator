@@ -1,24 +1,26 @@
 import gradio as gr
 
-# Keys are sorted by length descending in the processing function
-# to ensure the longest possible match is found first (e.g., 'khya' before 'khy' or 'k').
+#keys sorted by length descending in the processing function
+# to ensure the longest possible match is found first
 TIBETAN_MAP = {
+
      # Consonants + vowels
     "ka": "ཀ",   "kha": "ཁ",   "gha": "ག",   "nga": "ང",
     "ca": "ཅ",   "cha": "ཆ",   "ja": "ཇ",   "jha": "ཇ",   "nya": "ཉ",
     "ta": "ཏ",   "tha": "ཐ",   "dha": "ད",   "na": "ན",
-    "pa": "པ",   "pha": "ཕ",   "ba": "བ",   "bha": "བ",   "ma": "མ",
-    "tza": "ཙ",  "tzsa": "ཙ",  "tsza": "ཙ",  "tssa": "ཙ",  "tsa": "ཚ",   "za": "ཛ",   "wa": "ཝ",
+    "pa": "པ",   "pha": "ཕ",   "ba": "བ",    "wa": "བ",   "bha": "བ",   "ma": "མ",
+    "tza": "ཙ",  "tzsa": "ཙ",  "tsza": "ཙ",  "tssa": "ཙ",  "tsa": "ཚ",   "za": "ཛ",   "wwa": "ཝ", "waa": "ཝ",
     "zha": "ཞ",  "sza": "ཟ",   "ya": "ཡ",   "ra": "ར",
     "la": "ལ",   "sha": "ཤ",   "sa": "ས",
     "ha": "ཧ",   "a": "ཨ",
 
-    # Syllable-final (ending) consonants ('jejug chuu')
+    # syllable-final(ending) ('jejug chuu')
     "g": "ག",    "ng": "ང",    "n": "ན",    "b": "བ",
     "aa": "འ",   "m": "མ",     "l": "ལ",    "r": "ར",
     "s": "ས",    "p": "པ",     "k": "ག",    "dh": "ད",
+    "e": "ད",    "d": "ད",
 
-    # Vowel diacritics (applied to consonants)
+    #vowel diacritics(applied to consonants)
     "ki": "ཀི",   "ku": "ཀུ",   "ke": "ཀེ",   "ko": "ཀོ",
     "khi": "ཁི",  "khu": "ཁུ",  "khe": "ཁེ",  "kho": "ཁོ",
     "gi": "གི",   "gu": "གུ",   "ge": "གེ",   "go": "གོ",
@@ -30,7 +32,6 @@ TIBETAN_MAP = {
     "nyi": "ཉི",  "nyu": "ཉུ",  "nye": "ཉེ",  "nyo": "ཉོ",
     "ti": "ཏི",   "tu": "ཏུ",   "te": "ཏེ",   "to": "ཏོ",
     "thi": "ཐི",  "thu": "ཐུ",  "the": "ཐེ",  "tho": "ཐོ",
-    "di": "དི",   "du": "དུ",   "de": "དེ",   "do": "དོ",
     "dhi": "དི",  "dhu": "དུ",  "dhe": "དེ",  "dho": "དོ",
     "ni": "ནི",   "nu": "ནུ",   "ne": "ནེ",   "no": "ནོ",
     "pi": "པི",   "pu": "པུ",   "pe": "པེ",   "po": "པོ",
@@ -39,12 +40,12 @@ TIBETAN_MAP = {
     "mi": "མི",   "mu": "མུ",   "me": "མེ",   "mo": "མོ",
     
     "tzi": "ཙི",  "tzu": "ཙུ",  "tze": "ཙེ",  "tzo": "ཙོ",
-    "tssi": "ཙི",  "tssu": "ཙུ",  "tsse": "ཙེ",  "tsso": "ཙོ",
-    "tzsi": "ཙི",  "tzsu": "ཙུ",  "tzse": "ཙེ",  "tzso": "ཙོ",
-    "tszi": "ཙི",  "tszu": "ཙུ",  "tsze": "ཙེ",  "tszo": "ཙོ",
+    "tssi": "ཙི", "tssu": "ཙུ", "tsse": "ཙེ", "tsso": "ཙོ",
+    "tzsi": "ཙི", "tzsu": "ཙུ", "tzse": "ཙེ", "tzso": "ཙོ",
+    "tszi": "ཙི", "tszu": "ཙུ", "tsze": "ཙེ", "tszo": "ཙོ",
     
     "tsi": "ཚི",  "tsu": "ཚུ",  "tse": "ཚེ",  "tso": "ཚོ",
-    "zi": "ཛི ",  "zu": "ཛུ",   "ze": "ཛེ",   "zo": "ཛོ",
+    "zi": "ཛི",  "zu": "ཛུ",   "ze": "ཛེ",   "zo": "ཛོ",
     "zhi": "ཞི",  "zhu": "ཞུ",  "zhe": "ཞེ",  "zho": "ཞོ",
     "szi": "ཟི",  "szu": "ཟུ",  "sze": "ཟེ",  "szo": "ཟོ",
     "wi": "ཝི",   "wu": "ཝུ",   "we": "ཝེ",   "wo": "ཝོ",
@@ -54,8 +55,36 @@ TIBETAN_MAP = {
     "shi": "ཤི",  "shu": "ཤུ",  "she": "ཤེ",  "sho": "ཤོ",
     "si": "སི",   "su": "སུ",   "se": "སེ",   "so": "སོ",
     "hi": "ཧི",   "hu": "ཧུ",   "he": "ཧེ",   "ho": "ཧོ",
-  
+ 
     "i": "ཨི",   "u": "ཨུ",   "e": "ཨེ",   "o": "ཨོ",
+
+ #subjoined "ra" ('ratak')
+    "tra" : "ཀྲ", "tta": "ཁྲ", "tda": "ཁྲ", "da": "གྲ", "dra" : "དྲ", "ssa": "སྲ", "sra" :"སྲ", "nra" : "ནྲ", 
+    ### IMPRT TO SUGGESTIONS ###    "ta": པྲ  ཕྲ བྲ ཏྲ 
+          "thra" : "ཐྲ", "hra": "ཧྲ",
+	"tri" : "ཀྲི", "tru": "ཀྲུ", "tre": "ཀྲེ", "tro": "ཀྲོ",
+	"tdri" : "ཁྲི", "tdru" : "ཁྲུ", "tdre" : "ཁྲེ", "tdro" : "ཁྲོ",
+	"di":"གྲི", "du":"གྲུ",  "de": "གྲེ", "do": "གྲོ",
+	"dri":"དྲི", "dru":"དྲུ", "dre":"དྲེ", "dro":"དྲོ",  	"ddi":"དྲི", "ddu":"དྲུ", "dde":"དྲེ", "ddo":"དྲོ",
+	
+	"ssi" : "སྲི", "ssu": "སྲུ", "sse" : "སྲེ", "sso" :"སྲོ",
+	#ནི ནྲུ ནྲེ ནྲོ
+######SUGEESTi   :: :: པྲི པྲ པྲེ པྲ
+	#### SUGGESTIONS :::: : : ཕྲི ཕྲུ ཕྲེ ཕྲོ
+                    #####3   བྲི བྲུ བྲེ བྲོ
+ ###########3ཏྲི ཏྲ ཏྲེ ཏྲ
+###########ཐྲི ཐྲུ ཐྲེ ཐྲོ
+	"hri":"ཧྲི", "hru" : "ཧྲུ", "hre": "ཧྲེ", "hro": "ཧྲོ",    
+	
+    #Subjoined "la" (latak)
+         #ཀླཀླུ ཀླུ ཀླེ ཀློ
+	#གླ གླི གླུ གླེ གློ
+	#བླ བླི བླུ བླེ བློ
+	#རླ རླི རླུ རླེ རློ
+	#ཟླ ཟླི ཟླུ ཟླེ ཟློ
+	#སླ སླི སླུ སླེ སློ	
+	
+	
 
     # Subjoined 'ya' ('yatak')
     "kya": "ཀྱ",  "kyi": "ཀྱི",  "kyu": "ཀྱུ",  "kye": "ཀྱེ",  "kyo": "ཀྱོ",
@@ -64,103 +93,195 @@ TIBETAN_MAP = {
     "chhya": "པྱ", "chhyi": "པྱི", "chhyu": "པྱུ", "chhye": "པྱེ", "chhyo": "པྱོ",
     "chya": "ཕྱ",  "chyi": "ཕྱི",  "chyu": "ཕྱུ",  "chye": "ཕྱེ",  "chyo": "ཕྱོ",
     "jhya": "བྱ",  "jhyi": "བྱི",  "jhyu": "བྱུ",  "jhye": "བྱེ",  "jhyo": "བྱོ",
-    "nyya": "མྱ",  "nyyi": "མྱི",  "nyyu": "མྱུ",  "nyye": "མྱེ",  "nyyo": "མྱོ",
+    "nyya": "མྱ", "nyyi": "མྱི", "nyyu": "མྱུ", "nyye": "མྱེ", "nyyo": "མྱོ",
 
-    # Suffix letters (Jejug - འཇུག་པའི་ཡི་གེ)
-    # These are consonants at the end of a syllable.
-    "g": "ག", "ng": "ང", "d": "ད", "n": "ན", "b": "བ", "m": "མ",
-    "'": "འ", "r": "ར", "l": "ལ", "s": "ས",
-    # Historical/less common suffixes
-    "k": "ཀ", "p":"པ"
+##########################################################################################################################################################################################################################################
+##########################################################################3NUMBERS########################################################################################################################################################
+	"1": "༡",	"2": "༢",	"3": "༣",	"4": "༤",	"5": "༥",	"6": "༦",	"7": "༧",	"8": "༨",	"8": "༩",	"0": "༠",  
+###########################################################################################################################################################################################################################################
+
 }
-# Get the keys and sort them by length, descending.
-# This ensures "kha" is matched before "k", "ng" before "n", etc.
-SORTED_KEYS = sorted(TIBETAN_MAP.keys(), key=len, reverse=True)
 
+# 5 ngon-jug prefixes and 3 stackers
+NGON_JUG_PREFIXES = ["ག", "བ", "འ", "མ", "ད"]
+STACKERS = ["ལ", "ར", "ས"]
+SORTED_KEYS = sorted(TIBETAN_MAP.keys(), key=len, reverse=True)
+MAX_SUGGESTIONS = 8 #increased to show more variations
+
+#MODIFIED TRANSLITERATE FUNCTION
 def transliterate(roman_string):
     """
-    Transliterates a Romanized (Wylie-style) string into Tibetan script.
+    Translates a Roman (Wylie) string to Tibetan script.
+    It now handles vowel diacritics correctly and supports complex stacks.
     """
-    # Normalize input to lowercase to match the map keys
     roman_string = roman_string.lower()
-    
     tibetan_output = ""
     i = 0
-    while i < len(roman_string):
-        # Handle space, which indicates the end of a syllable
+    length = len(roman_string)
+
+    while i < length:
+        #handle spaces and punctuation first
         if roman_string[i] == ' ':
-            tibetan_output += "་" # Appends the 'tsheg' character
+            tibetan_output += "་"  # tsek
+            i += 1
+            continue
+        elif roman_string[i] == '.':
+            tibetan_output += "།" # che
             i += 1
             continue
 
-        # Greedily find the longest matching key from our dictionary
-        match_found = False
+        #check for the longest possible key match from the current position
+        found_match = False
         for key in SORTED_KEYS:
             if roman_string.startswith(key, i):
-                tibetan_output += TIBETAN_MAP[key]
+                tibetan_char = TIBETAN_MAP[key]
+                #if its a vowel it modifies the previous character
+                if key in "iuoe" and tibetan_output:
+                    # check if last char is a consonant that can take a vowel
+                    if 0x0F40 <= ord(tibetan_output[-1]) <= 0x0F6C:
+                         tibetan_output += tibetan_char
+                    else: #standalone vowel so add the 'ཨ' base
+                         tibetan_output += TIBETAN_MAP['a'] + tibetan_char
+                else:
+                    tibetan_output += tibetan_char
+
                 i += len(key)
-                match_found = True
+                found_match = True
                 break
         
-        # If no key was matched, skip the character and move on
-        if not match_found:
+        if not found_match:
+            # no match found.. skip the character
             i += 1
-            
+
     return tibetan_output
 
-def clear_text():
-    """Returns empty strings to clear the text boxes."""
-    return "", ""
 
-# --- Gradio Interface ---
+#SUGGESTION LOGIC
+def get_suggestions(current_input):
+    """
+    Finds syllable suggestions based on the last Roman syllable being typed.
+    """
+    if not current_input or current_input.endswith(' '):
+        return []
+
+    last_word = current_input.split(' ')[-1].lower()
+    if not last_word:
+        return []
+
+    #check if the typed word is in map that can be modified
+    if last_word in TIBETAN_MAP:
+        base_tibetan = TIBETAN_MAP[last_word]
+        suggestions = []
+
+        #generate Prefixed or ngonjug suggestions
+        for prefix in NGON_JUG_PREFIXES:
+            # Format: {Roman Trigger}:{Display Text}:{Tibetan Value}
+            suggestions.append(f"{last_word}:Prefix {prefix}: {prefix}{base_tibetan}")
+
+        #generate Stacked suggestions
+        try:
+            # Calculate the subjoined form of the base character
+            subjoined = chr(0x0F90 + (ord(base_tibetan) - 0x0F40))
+            for stacker in STACKERS:
+                suggestions.append(f"{last_word}:Stack {stacker}: {stacker}{subjoined}")
+        except (ValueError, TypeError):
+            pass #this base character cannot be subjoined
+
+        return suggestions
+
+    return [] #return empty if not a base consonant
+
+#main update function
+def update_on_input(roman_string):
+    tibetan_text = transliterate(roman_string)
+    suggestions = get_suggestions(roman_string)
+    
+    button_updates = []
+    for i in range(MAX_SUGGESTIONS):
+        if i < len(suggestions):
+            full_suggestion_data = suggestions[i]
+            display_text = full_suggestion_data.split(':')[1]
+            tibetan_value = full_suggestion_data.split(':')[2].strip()
+            
+            update = gr.Button(f"{display_text}: {tibetan_value}", value=full_suggestion_data, visible=True)
+        else:
+            update = gr.Button(visible=False)
+        button_updates.append(update)
+
+    return [tibetan_text] + button_updates
+
+#BUTTON CLICK HANDLER
+def update_input_with_suggestion(current_input, suggestion_data):
+    """
+    Replaces the last typed Roman syllable with the chosen Tibetan variation.
+    """
+    # suggestion_data is "ka:Prefix ག: གཀ"
+    if not suggestion_data:
+        return current_input
+
+    roman_trigger = suggestion_data.split(':')[0]
+    tibetan_value = suggestion_data.split(':')[2].strip()
+
+    #replace the last occurrence of the roman trigger with the final tibetan value
+    #this intentionally mixes scripts in the input box, which the main
+    #transliterate function will now handle by re-composing the final string.
+    parts = current_input.rsplit(roman_trigger, 1)
+    new_input = tibetan_value.join(parts) + " "
+
+    return new_input
+
+#GRADIO INTERFACE#
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown(
         """
-        #  Tibetan Transliteration Tool 🏔️
-        Type Romanized Tibetan (Wylie style) in the box below and see the Tibetan script appear in real-time.
-        - Use a **space** to mark the end of a syllable (it will add a `་` tsheg).
-        - Examples: `bod`, `sangs rgyas`, `bkra shis bde legs`
+        # Tibetan Transliteration Tool
         """
     )
-    
+
     with gr.Row():
         roman_input = gr.Textbox(
-            label="Roman Input (Wylie)",
-            placeholder="Type here, e.g., 'om ma ni pad me hung'",
+            label="Roman Input",
+            placeholder="Type here...",
             lines=4
         )
         tibetan_output = gr.Textbox(
             label="Tibetan Script Output",
             interactive=False,
             lines=4,
-            rtl=True # Right-to-Left text direction for Tibetan
+            rtl=True
         )
+
+    with gr.Row():
+        suggestion_buttons = [gr.Button(visible=False) for _ in range(MAX_SUGGESTIONS)]
 
     clear_button = gr.Button("Clear")
 
-    # Event Handlers
+    #Event Handlers
     roman_input.change(
-        fn=transliterate,
+        fn=update_on_input,
         inputs=roman_input,
-        outputs=tibetan_output
+        outputs=[tibetan_output] + suggestion_buttons
     )
-    
+
+    for btn in suggestion_buttons:
+        btn.click(
+            fn=update_input_with_suggestion,
+            inputs=[roman_input, btn],
+            outputs=roman_input
+        ).then( #chain another event to update the output right away
+            fn=update_on_input,
+            inputs=roman_input,
+            outputs=[tibetan_output] + suggestion_buttons
+        )
+
+    def clear_all():
+        button_updates = [gr.Button(visible=False) for _ in range(MAX_SUGGESTIONS)]
+        return ["", ""] + button_updates
+
     clear_button.click(
-        fn=clear_text,
+        fn=clear_all,
         inputs=None,
-        outputs=[roman_input, tibetan_output]
-    )
-    
-    gr.Markdown("---")
-    gr.Examples(
-        examples=[
-            "sangs rgyas",
-            "bod skad",
-            "rdo rje",
-            "karma",
-            "bkra shis bde legs"
-        ],
-        inputs=roman_input
+        outputs=[roman_input, tibetan_output] + suggestion_buttons
     )
 
 if __name__ == "__main__":
