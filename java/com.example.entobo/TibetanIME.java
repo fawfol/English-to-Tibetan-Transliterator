@@ -29,8 +29,9 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         return keyboardView;
     }
 
-    // fucntion handles the repeating logic: finalizes the transliteration of the
-    // current composing text and clears the engine for the next word
+    // *** NEW HELPER METHOD ***
+    // This function handles the repeating logic: it finalizes the transliteration of the
+    // current composing text and clears the engine for the next word.
     private void commitComposingText() {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
@@ -45,14 +46,14 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         ic.setComposingText("", 1);
     }
 
-	//ON KEY methdod
+    // *** UPDATED onKey METHOD ***
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
         switch (primaryCode) {
-            case -5: // backspace
+            case -5: // Backspace
                 if (engine.getStackLength() > 0) {
                     engine.backspace();
                     ic.setComposingText(engine.getStack(), 1);
@@ -61,26 +62,26 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                 }
                 break;
 
-            //  NEW CASE for Shad '།' 
+            // *** NEW CASE for Shad '།' ***
             case -101:
-                commitComposingText();
-                ic.commitText("། ", 1);
+                commitComposingText();         // 1. Finish the current word
+                ic.commitText("། ", 1); // 2. Add shad and a space
                 break;
 
-            //  NEW CASE for Tseg '་' 
+            // *** NEW CASE for Tseg '་' ***
             case -102:
-                commitComposingText();        
-                ic.commitText("་", 1);    
+                commitComposingText();         // 1. Finish the current word
+                ic.commitText("་", 1);    // 2. Add the tseg
                 break;
 
-            /.MODIFIED CASE for Space 
+            // *** MODIFIED CASE for Space ***
             case 32:
-                commitComposingText(); 
-                ic.commitText(" ", 1); 
+                commitComposingText();         // 1. Finish the current word
+                ic.commitText(" ", 1);    // 2. Add a regular space
                 break;
 
             default:
-                // this is a normal letter key
+                // This is a normal letter key
                 char code = (char) primaryCode;
                 engine.push(String.valueOf(code));
                 updateInput();
@@ -111,7 +112,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         }
     }
 
-    //other required listener methods (leave them empty)
+    // Other required listener methods (leave them empty)
     @Override public void onPress(int primaryCode) {}
     @Override public void onRelease(int primaryCode) {}
     @Override public void onText(CharSequence text) {}

@@ -19,6 +19,7 @@ public class TransliterationEngine {
         initializeMap();
     }
 
+    // This is your complete map of rules
     private void initializeMap() {
         // Base Consonants
         tibetanMap.put("ka", "ཀ");
@@ -321,7 +322,7 @@ public class TransliterationEngine {
 
     public String getLongestMatch() {
         String stackString = stack.toString();
-        // check for longest possible match first
+        // Check for longest possible match first
         for (int i = stackString.length(); i > 0; i--) {
             String sub = stackString.substring(0, i);
             if (tibetanMap.containsKey(sub)) {
