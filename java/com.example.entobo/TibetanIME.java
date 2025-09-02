@@ -12,14 +12,12 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 
     private KeyboardView keyboardView;
     private Keyboard keyboard;
-
-    //create an instance of trransliteration logic engine
     private TransliterationEngine engine;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        engine = new TransliterationEngine(); //initialize the engine
+        engine = new TransliterationEngine();
     }
 
     @Override
@@ -31,37 +29,62 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         return keyboardView;
     }
 
+    //NEW HELPER METHOD
+    //this function handles the repeating logic: it finalizes the transliteration of the
+    //current composing text and clears the engine for the next word
+    private void commitComposingText() {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return;
+
+        String match = engine.getLongestMatch();
+        if (!match.isEmpty()) {
+            //commit the final Tibetan part of the syllable
+            ic.commitText(engine.getTibetan(match), 1);
+        }
+        //clean up the engine and the composing view
+        engine.clearStack();
+        ic.setComposingText("", 1);
+    }
+
+    //UPDATED onKey METHOD
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
-        //using ASCII code to handle the key press
         switch (primaryCode) {
-            case -5: //htis is the code for Backspace
+            case -5: //backspace
                 if (engine.getStackLength() > 0) {
                     engine.backspace();
-                    // update the underlined "composing" text
                     ic.setComposingText(engine.getStack(), 1);
                 } else {
-                    //if our stack is empty, just do a normal backspace
                     ic.deleteSurroundingText(1, 0);
                 }
                 break;
-            case 32: //this is the code for Space
-                String match = engine.getLongestMatch();
-                if (!match.isEmpty()) {
-                    //commit the final Tibetan part of the syllable
-                    ic.commitText(engine.getTibetan(match), 1);
-                }
-                //append the tsheg '་' (syllable-separating dot)
-                ic.commitText("་", 1);
-                engine.clearStack(); //clear the stack for the next word
+
+            //NEW CASE for Shae '།'
+            case -101:
+                commitComposingText();
+                ic.commitText("། ", 1);
                 break;
+
+            //NEW CASE for Tseg '་' 
+            case -102:
+                commitComposingText();
+                ic.commitText("་", 1);
+                break;
+
+            //MODIFIED CASE for Space
+            case 32:
+                commitComposingText();
+                ic.commitText(" ", 1);
+                break;
+
             default:
+                //normal letter key
                 char code = (char) primaryCode;
                 engine.push(String.valueOf(code));
-                updateInput(); //call the main logic handler
+                updateInput();
         }
     }
 
@@ -73,7 +96,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         String longestMatch = engine.getLongestMatch();
 
         if (longestMatch.isEmpty()) {
-            //no valid Tibetan match yet, so just show the English letters the user is typing
             ic.setComposingText(stackContent, 1);
             return;
         }
@@ -81,19 +103,16 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         String remaining = stackContent.substring(longestMatch.length());
 
         if (engine.isEndingLetter(remaining)) {
-            //a syllable is complete. commit the matched Tibetan text
             ic.commitText(engine.getTibetan(longestMatch), 1);
-            // and start a new stack with the remaining ending letter
             engine.clearStack();
             engine.push(remaining);
             ic.setComposingText(engine.getStack(), 1);
         } else {
-	
             ic.setComposingText(stackContent, 1);
         }
     }
 
-    //other required listener methods (leave them empty)
+    // other required listener methods (leave them empty)
     @Override public void onPress(int primaryCode) {}
     @Override public void onRelease(int primaryCode) {}
     @Override public void onText(CharSequence text) {}
