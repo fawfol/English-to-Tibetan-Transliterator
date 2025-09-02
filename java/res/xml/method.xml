@@ -1,0 +1,4 @@
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:isDefault="true"
+    android:canRetrieveWindowContent="true"
+    android:supportsSwitchingToNextInputMethod="true" />
