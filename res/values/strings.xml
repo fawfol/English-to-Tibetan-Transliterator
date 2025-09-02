@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">En2Bo Transliterator</string>
+
+    <string name="welcome_title">WELCOME TO\nENGLISH TO BODYIG|TIBETAN TRANSLITERATOR</string>
+
+    <string name="how_to_title">How to Use This Keyboard</string>
+    <string name="how_to_steps">
+        After Installing :\n
+        1. Open your phone\'s Settings.\n
+        2. Go to General Management > Keyboard list and default.\n
+        3. Turn on the switch for \"En2Bo Transliterator\".\n
+        4. Open any app with a text field (like Messages).\n
+        5. Tap the keyboard icon in the bottom-right corner.\n
+        6. Select \"En2Bo Transliterator\" from the list.\n\n
+        <b>Important:</b> This app is the container for the keyboard service. Please do not uninstall it, or the keyboard will be removed.
+    </string>
+
+    <string name="about_title">About This Project</string>
+    <string name="about_description">
+        An English to Tibetan Transliterator.
+        This keyboard allows people to type Tibetan words more easily on mobile phones\n
+        English letters that match the pronunciation of Tibetan words are automatically transliterated into
+        Tibetan script.
+    </string>
+
+    <string name="story_title">My Motivation</string>
+    <string name="story_description">
+        As a Tibetan refugee, this project is deeply personal. I believe that a culture is built upon
+            the foundation of its language. With our country lost and our culture facing systematic elimination,
+            preserving our language is not just a choice but an act of survival.\n\n
+        I\'ve watched, with a heavy heart as my own generation turns to English for texting and social media,
+            not out of preference, but for convenience and I Understand it as this is my story too. \n
+        I used to be confident with my Tibetan in school years, but these days I find myself struggling to
+        compose a formal application or even a simple poem in Tibetan which used to be very easy\n\n
+        The connection to our rich written heritage is fading, even for those of us who speak Tibetan every day.
+        I realized a major barrier with motive of typing in Tibetan and use of it while chatting with friends for
+        example wasn\'t a lack of desire, but a lack of modern tools. The standard Tibetan keyboard on mobile phone
+        is complex and due to concept syllable stacking of Tibetan, is difficult and slow to use on a mobile phone.\n
+        This keyboard is my small contribution to changing that. By making it fast and intuitive to type Tibetan
+        phonetically, I hope to remove that technical frustration. \n
+        My dream is to see our digital spaces filled with our beautiful script, strengthening our community and
+        ensuring our language—the soul of our culture—thrives for generations to come. Encouraging more people,
+        especially Tibetans the younger generation, to use Tibetan as their primary language in purpose such
+        as texting on social medias or any use case they find.
+    </string>
+</resources>

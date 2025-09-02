@@ -29,31 +29,30 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         return keyboardView;
     }
 
-    //NEW HELPER METHOD
-    //this function handles the repeating logic: it finalizes the transliteration of the
-    //current composing text and clears the engine for the next word
+    // fucntion handles the repeating logic: finalizes the transliteration of the
+    // current composing text and clears the engine for the next word
     private void commitComposingText() {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
         String match = engine.getLongestMatch();
         if (!match.isEmpty()) {
-            //commit the final Tibetan part of the syllable
+            // Commit the final Tibetan part of the syllable
             ic.commitText(engine.getTibetan(match), 1);
         }
-        //clean up the engine and the composing view
+        // Clean up the engine and the composing view
         engine.clearStack();
         ic.setComposingText("", 1);
     }
 
-    //UPDATED onKey METHOD
+	//ON KEY methdod
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
         switch (primaryCode) {
-            case -5: //backspace
+            case -5: // backspace
                 if (engine.getStackLength() > 0) {
                     engine.backspace();
                     ic.setComposingText(engine.getStack(), 1);
@@ -62,26 +61,26 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                 }
                 break;
 
-            //NEW CASE for Shae '།'
+            //  NEW CASE for Shad '།' 
             case -101:
                 commitComposingText();
                 ic.commitText("། ", 1);
                 break;
 
-            //NEW CASE for Tseg '་' 
+            //  NEW CASE for Tseg '་' 
             case -102:
-                commitComposingText();
-                ic.commitText("་", 1);
+                commitComposingText();        
+                ic.commitText("་", 1);    
                 break;
 
-            //MODIFIED CASE for Space
+            /.MODIFIED CASE for Space 
             case 32:
-                commitComposingText();
-                ic.commitText(" ", 1);
+                commitComposingText(); 
+                ic.commitText(" ", 1); 
                 break;
 
             default:
-                //normal letter key
+                // this is a normal letter key
                 char code = (char) primaryCode;
                 engine.push(String.valueOf(code));
                 updateInput();
@@ -112,7 +111,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         }
     }
 
-    // other required listener methods (leave them empty)
+    //other required listener methods (leave them empty)
     @Override public void onPress(int primaryCode) {}
     @Override public void onRelease(int primaryCode) {}
     @Override public void onText(CharSequence text) {}
