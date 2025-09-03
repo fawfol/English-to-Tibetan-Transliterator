@@ -14,7 +14,7 @@ import android.app.AlertDialog;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-int count = 0;
+int count = 0; //map dialog fomratting 2 per line
 int countWord = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ int countWord = 0;
         showMapButton.setOnClickListener(v -> {
             TransliterationEngine engine = new TransliterationEngine();
             StringBuilder mapBuilder = new StringBuilder("Roman → Tibetan\n\n");
-            count = 0; //reset count each time the button is clicked
+            count = 0; countWord = 0; //reset count each time the button is clicked
 
             for (Map.Entry<String, String> entry : engine.tibetanMap.entrySet()) {
                 count += 1; countWord += 1;
@@ -58,9 +58,17 @@ int countWord = 0;
                     .setPositiveButton("Close", null)
                     .show();
         });
-        TextView contactInfoTextView = findViewById(R.id.contactInfoTextView);
-        contactInfoTextView.setText(Html.fromHtml(getString(R.string.contact_info), Html.FROM_HTML_MODE_LEGACY));
-        contactInfoTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
+
+        TextView contactTextView = findViewById(R.id.contactInfoTextView);
+        String contactHtml = getString(R.string.contact_info);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            contactTextView.setText(Html.fromHtml(contactHtml, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            contactTextView.setText(Html.fromHtml(contactHtml));
+        }
+
+        contactTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
