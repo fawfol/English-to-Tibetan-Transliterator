@@ -1,33 +1,45 @@
-// File: app/java/com/example/entobo/TransliterationEngine.java
+// File: /home/kalsang/AndroidStudioProjects/entobo/app/src/main/java/com/example/entobo/TransliterationEngine.java
 
 package com.example.entobo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class TransliterationEngine {
-    private final Map<String, String> tibetanMap = new HashMap<>();
+    public final Map<String, String> tibetanMap = new LinkedHashMap<>();
     private final Set<String> endingLetters = new HashSet<>(Arrays.asList(
             "g", "ng", "n", "b", "m", "r", "l", "s", "p", "k", "dh"
     ));
     private final StringBuilder stack = new StringBuilder();
 
+    private static final List<String> NGON_JUG_PREFIXES = Arrays.asList(
+            "ག", "ད", "བ", "འ", "མ"
+    );
+
+    private static final List<String> STACKERS = Arrays.asList(
+            "ར", "ལ", "ས"
+    );
+
     public TransliterationEngine() {
         initializeMap();
     }
 
-    // This is your complete map of rules
     private void initializeMap() {
+
         // Base Consonants
         tibetanMap.put("ka", "ཀ");
         tibetanMap.put("kha", "ཁ");
+        tibetanMap.put("ca", "ཁ");
         tibetanMap.put("gha", "ག");
         tibetanMap.put("nga", "ང");
-        tibetanMap.put("ca", "ཅ");
-        tibetanMap.put("cha", "ཆ");
+        tibetanMap.put("cha", "ཅ");
+        tibetanMap.put("chha", "ཆ");
         tibetanMap.put("ja", "ཇ");
         tibetanMap.put("jha", "ཇ");
         tibetanMap.put("nya", "ཉ");
@@ -38,7 +50,7 @@ public class TransliterationEngine {
         tibetanMap.put("pa", "པ");
         tibetanMap.put("pha", "ཕ");
         tibetanMap.put("ba", "བ");
-        tibetanMap.put("wa", "བ");
+        tibetanMap.put("wa", "ཝ");
         tibetanMap.put("bha", "བ");
         tibetanMap.put("ma", "མ");
         tibetanMap.put("tza", "ཙ");
@@ -47,8 +59,8 @@ public class TransliterationEngine {
         tibetanMap.put("tssa", "ཙ");
         tibetanMap.put("tsa", "ཚ");
         tibetanMap.put("za", "ཛ");
-        tibetanMap.put("wwa", "ཝ");
         tibetanMap.put("waa", "ཝ");
+        tibetanMap.put("wa", "ཝ");
         tibetanMap.put("zha", "ཞ");
         tibetanMap.put("sza", "ཟ");
         tibetanMap.put("ya", "ཡ");
@@ -72,7 +84,6 @@ public class TransliterationEngine {
         tibetanMap.put("p", "པ");
         tibetanMap.put("k", "ག");
         tibetanMap.put("dh", "ད");
-        tibetanMap.put("e", "ད");
         tibetanMap.put("d", "ད");
 
         // Vowel diacritics (applied to consonants)
@@ -96,14 +107,14 @@ public class TransliterationEngine {
         tibetanMap.put("ngu", "ངུ");
         tibetanMap.put("nge", "ངེ");
         tibetanMap.put("ngo", "ངོ");
-        tibetanMap.put("chhi", "ཅི");
-        tibetanMap.put("chhu", "ཅུ");
-        tibetanMap.put("chhe", "ཅེ");
-        tibetanMap.put("chho", "ཅོ");
-        tibetanMap.put("chi", "ཆི");
-        tibetanMap.put("chu", "ཆུ");
-        tibetanMap.put("che", "ཆེ");
-        tibetanMap.put("cho", "ཆོ");
+        tibetanMap.put("chi", "ཅི");
+        tibetanMap.put("chu", "ཅུ");
+        tibetanMap.put("che", "ཅེ");
+        tibetanMap.put("cho", "ཅོ");
+        tibetanMap.put("chhi", "ཆི");
+        tibetanMap.put("chhu", "ཆུ");
+        tibetanMap.put("chhe", "ཆེ");
+        tibetanMap.put("chho", "ཆོ");
         tibetanMap.put("jhi", "ཇི");
         tibetanMap.put("jhu", "ཇུ");
         tibetanMap.put("jhe", "ཇེ");
@@ -213,7 +224,6 @@ public class TransliterationEngine {
         tibetanMap.put("e", "ཨེ");
         tibetanMap.put("o", "ཨོ");
 
-
         // Subjoined "ra" ('ratak')
         tibetanMap.put("tra", "ཀྲ");
         tibetanMap.put("tta", "ཁྲ");
@@ -223,7 +233,6 @@ public class TransliterationEngine {
         tibetanMap.put("ssa", "སྲ");
         tibetanMap.put("sra", "སྲ");
         tibetanMap.put("nra", "ནྲ");
-        // ### IMPRT TO SUGGESTIONS ### "ta" could be: པྲ ཕྲ བྲ ཏྲ
         tibetanMap.put("thra", "ཐྲ");
         tibetanMap.put("hra", "ཧྲ");
         tibetanMap.put("tri", "ཀྲི");
@@ -250,24 +259,66 @@ public class TransliterationEngine {
         tibetanMap.put("ssu", "སྲུ");
         tibetanMap.put("sse", "སྲེ");
         tibetanMap.put("sso", "སྲོ");
-        // ནི ནྲུ ནྲེ ནྲོ
-        // SUGGESTIONS :: པྲི པྲ པྲེ པྲ
-        // SUGGESTIONS :: ཕྲི ཕྲུ ཕྲེ ཕྲོ
-        // SUGGESTIONS :: བྲི བྲུ བྲེ བྲོ
-        // SUGGESTIONS :: ཏྲི ཏྲ ཏྲེ ཏྲ
-        // SUGGESTIONS :: ཐྲི ཐྲུ ཐྲེ ཐྲོ
+        tibetanMap.put("nri", "ནྲི");
+        tibetanMap.put("nru", "ནྲུ");
+        tibetanMap.put("nre", "ནྲེ");
+        tibetanMap.put("nro", "ནྲོ");
+        tibetanMap.put("pra", "པྲ");
+        tibetanMap.put("pri", "པྲི");
+        tibetanMap.put("pru", "པྲུ");
+        tibetanMap.put("pre", "པྲེ");
+        tibetanMap.put("pro", "པྲོ");
+        tibetanMap.put("phra", "ཕྲ");
+        tibetanMap.put("phri", "ཕྲི");
+        tibetanMap.put("phru", "ཕྲུ");
+        tibetanMap.put("phre", "ཕྲེ");
+        tibetanMap.put("phro", "ཕྲོ");
+        tibetanMap.put("bra", "བྲ");
+        tibetanMap.put("bri", "བྲི");
+        tibetanMap.put("bru", "བྲུ");
+        tibetanMap.put("bre", "བྲེ");
+        tibetanMap.put("bro", "བྲོ");
+        tibetanMap.put("tara", "ཏྲ");
+        tibetanMap.put("tari", "ཏྲི");
+        tibetanMap.put("taru", "ཏྲུ");
+        tibetanMap.put("tare", "ཏྲེ");
+        tibetanMap.put("taro", "ཏྲོ");
         tibetanMap.put("hri", "ཧྲི");
         tibetanMap.put("hru", "ཧྲུ");
         tibetanMap.put("hre", "ཧྲེ");
         tibetanMap.put("hro", "ཧྲོ");
 
         // Subjoined "la" (latak)
-        // ཀླ ཀླི ཀླུ ཀླེ ཀློ
-        // གླ གླི གླུ གླེ གློ
-        // བླ བླི བླུ བླེ བློ
-        // རླ རླི རླུ རླེ རློ
-        // ཟླ ཟླི ཟླུ ཟླེ ཟློ
-        // སླ སླི སླུ སླེ སློ
+        tibetanMap.put("kla", "ཀླ");
+        tibetanMap.put("kli", "ཀླི");
+        tibetanMap.put("klu", "ཀླུ");
+        tibetanMap.put("kle", "ཀླེ");
+        tibetanMap.put("klo", "ཀློ");
+        tibetanMap.put("gla", "གླ");
+        tibetanMap.put("gli", "གླི");
+        tibetanMap.put("glu", "གླུ");
+        tibetanMap.put("gle", "གླེ");
+        tibetanMap.put("glo", "གློ");
+        tibetanMap.put("bla", "བླ");
+        tibetanMap.put("bli", "བླི");
+        tibetanMap.put("blu", "བླུ");
+        tibetanMap.put("ble", "བླེ");
+        tibetanMap.put("blo", "བློ");
+        tibetanMap.put("rla", "རླ");
+        tibetanMap.put("rli", "རླི");
+        tibetanMap.put("rlu", "རླུ");
+        tibetanMap.put("rle", "རླེ");
+        tibetanMap.put("rlo", "རློ");
+        tibetanMap.put("zla", "ཟླ");
+        tibetanMap.put("zli", "ཟླི");
+        tibetanMap.put("zlu", "ཟླུ");
+        tibetanMap.put("zle", "ཟླེ");
+        tibetanMap.put("zlo", "ཟློ");
+        tibetanMap.put("sla", "སླ");
+        tibetanMap.put("sli", "སླི");
+        tibetanMap.put("slu", "སླུ");
+        tibetanMap.put("sle", "སླེ");
+        tibetanMap.put("slo", "སློ");
 
         // Subjoined 'ya' ('yatak')
         tibetanMap.put("kya", "ཀྱ");
@@ -320,38 +371,54 @@ public class TransliterationEngine {
         tibetanMap.put("0", "༠");
     }
 
-    //suggestion word generator
     public List<String> getSuggestions() {
         String currentSyllable = stack.toString();
         List<String> suggestions = new ArrayList<>();
 
-        if (currentSyllable.isEmpty() || !tibetanMap.containsKey(currentSyllable)) {
-            return suggestions; // Return empty list if no base match
+        if (currentSyllable.isEmpty()) {
+            return suggestions;
         }
 
-        String baseTibetan = tibetanMap.get(currentSyllable);
-        char baseChar = baseTibetan.charAt(0);
-
-        // 1. Generate Prefixed (ngonjug) suggestions
-        for (String prefix : NGON_JUG_PREFIXES) {
-            suggestions.add(prefix + baseTibetan);
+        String baseRoman = getLongestMatch();
+        if (baseRoman.isEmpty() || !tibetanMap.containsKey(baseRoman)) {
+            return suggestions;
         }
 
-        // 2. Generate Stacked suggestions
-        // This is the Unicode logic to convert a character to its subjoined form
-        if (baseChar >= 0x0F40 && baseChar <= 0x0F6C) {
-            char subjoined = (char) (0x0F90 + (baseChar - 0x0F40));
-            for (String stacker : STACKERS) {
-                suggestions.add(stacker + String.valueOf(subjoined));
+        String baseTibetan = tibetanMap.get(baseRoman);
+        if (baseTibetan == null || baseTibetan.isEmpty()) {
+            return suggestions;
+        }
+
+        char firstCharOfBase = baseTibetan.charAt(0);
+
+        if (baseTibetan.length() == 1 && firstCharOfBase >= 0x0F40 && firstCharOfBase <= 0x0F6C) {
+            for (String prefix : NGON_JUG_PREFIXES) {
+                suggestions.add(prefix + baseTibetan);
+            }
+        } else if (baseTibetan.length() > 1 && baseTibetan.charAt(1) >= 0x0F71 && baseTibetan.charAt(1) <= 0x0F81) {
+            for (String prefix : NGON_JUG_PREFIXES) {
+                suggestions.add(prefix + baseTibetan);
             }
         }
-        
-        return suggestions;
+
+        if (firstCharOfBase >= 0x0F40 && firstCharOfBase <= 0x0F6C) {
+            char subjoinedChar = (char) (0x0F90 + (firstCharOfBase - 0x0F40));
+            for (String stacker : STACKERS) {
+                if (stacker.length() == 1 && stacker.charAt(0) >= 0x0F40 && stacker.charAt(0) <= 0x0F6C) {
+                    String subjoinedTibetan = String.valueOf(subjoinedChar);
+                    if (baseTibetan.length() > 1 && baseTibetan.charAt(1) >= 0x0F71 && baseTibetan.charAt(1) <= 0x0F81) {
+                        subjoinedTibetan += baseTibetan.substring(1);
+                    }
+                    suggestions.add(stacker + subjoinedTibetan);
+                }
+            }
+        }
+        return new ArrayList<>(new HashSet<>(suggestions));
     }
+
 
     public String getLongestMatch() {
         String stackString = stack.toString();
-        // Check for longest possible match first
         for (int i = stackString.length(); i > 0; i--) {
             String sub = stackString.substring(0, i);
             if (tibetanMap.containsKey(sub)) {

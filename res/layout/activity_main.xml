@@ -75,5 +75,47 @@
             android:textSize="16sp"
             android:lineSpacingExtra="4dp"/>
 
+        <Button
+            android:id="@+id/showTranslitMapButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Roman–Tibetan Map"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"/>
+
+
+
+        <TextView
+            android:id="@+id/contactTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/contactInfoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_info"
+            android:textSize="16sp"
+            android:autoLink="web|email"
+            android:linksClickable="true"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/copyrightTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/copyright_text"
+            android:textSize="14sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"/>
+
+
+
     </LinearLayout>
 </ScrollView>
