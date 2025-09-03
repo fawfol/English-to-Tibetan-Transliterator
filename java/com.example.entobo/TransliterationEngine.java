@@ -320,6 +320,35 @@ public class TransliterationEngine {
         tibetanMap.put("0", "༠");
     }
 
+    //suggestion word generator
+    public List<String> getSuggestions() {
+        String currentSyllable = stack.toString();
+        List<String> suggestions = new ArrayList<>();
+
+        if (currentSyllable.isEmpty() || !tibetanMap.containsKey(currentSyllable)) {
+            return suggestions; // Return empty list if no base match
+        }
+
+        String baseTibetan = tibetanMap.get(currentSyllable);
+        char baseChar = baseTibetan.charAt(0);
+
+        // 1. Generate Prefixed (ngonjug) suggestions
+        for (String prefix : NGON_JUG_PREFIXES) {
+            suggestions.add(prefix + baseTibetan);
+        }
+
+        // 2. Generate Stacked suggestions
+        // This is the Unicode logic to convert a character to its subjoined form
+        if (baseChar >= 0x0F40 && baseChar <= 0x0F6C) {
+            char subjoined = (char) (0x0F90 + (baseChar - 0x0F40));
+            for (String stacker : STACKERS) {
+                suggestions.add(stacker + String.valueOf(subjoined));
+            }
+        }
+        
+        return suggestions;
+    }
+
     public String getLongestMatch() {
         String stackString = stack.toString();
         // Check for longest possible match first

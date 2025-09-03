@@ -3,18 +3,24 @@ package com.example.entobo;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.view.Gravity;
 import android.view.View;
-import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import java.util.List;
 
 public class TibetanIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
 
     private KeyboardView keyboardView;
     private TransliterationEngine engine;
+    private LinearLayout candidatesView;
 
     private Keyboard tibetanKeyboard;
     private Keyboard englishKeyboard;
-    private boolean isTibetanMode = true; //start in Tibetan mode
+
+    private boolean isTibetanMode = true;
     private boolean isShifted = false;
 
     @Override
@@ -26,31 +32,73 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     @Override
     public View onCreateInputView() {
         keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
-
-        // LOAD BOTH LAYOUTs
         tibetanKeyboard = new Keyboard(this, R.xml.keyboard_tibetan);
         englishKeyboard = new Keyboard(this, R.xml.keyboard_english);
-
         keyboardView.setKeyboard(tibetanKeyboard);
         keyboardView.setOnKeyboardActionListener(this);
         return keyboardView;
     }
 
+    @Override
+    public View onCreateCandidatesView() {
+        candidatesView = (LinearLayout) getLayoutInflater().inflate(R.layout.candidates_view, null);
+        return candidatesView;
+    }
+
+    private void updateSuggestions() {
+        if (!isTibetanMode || candidatesView == null) {
+            setCandidatesViewShown(false);
+            return;
+        }
+
+        List<String> suggestions = engine.getSuggestions();
+        if (suggestions.isEmpty()) {
+            setCandidatesViewShown(false);
+            return;
+        }
+
+        setCandidatesViewShown(true);
+        candidatesView.removeAllViews();
+
+        for (final String suggestion : suggestions) {
+            TextView suggestionView = new TextView(this);
+            suggestionView.setText(suggestion);
+            suggestionView.setTextColor(0xFFFFFFFF);
+            suggestionView.setGravity(Gravity.CENTER);
+            suggestionView.setPadding(20, 10, 20, 10);
+            suggestionView.setTextSize(20);
+            suggestionView.setBackgroundColor(0x00000000);
+            suggestionView.setOnClickListener(v -> pickSuggestion(suggestion));
+            candidatesView.addView(suggestionView);
+        }
+    }
+
+    private void pickSuggestion(String suggestion) {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic != null) {
+            engine.clearStack();
+            ic.commitText(suggestion, 1);
+            updateSuggestions();
+        }
+    }
+
     private void switchKeyboardLayout() {
         isTibetanMode = !isTibetanMode;
-
         isShifted = false;
-        englishKeyboard.setShifted(false);
+        if (englishKeyboard != null) {
+            englishKeyboard.setShifted(false);
+        }
 
         if (isTibetanMode) {
             keyboardView.setKeyboard(tibetanKeyboard);
         } else {
-            engine.clearStack();
+            commitComposingText(); //finish any Tibetan word before switching
             keyboardView.setKeyboard(englishKeyboard);
         }
+        updateSuggestions(); //update suggestions after switching
     }
+
     private void commitComposingText() {
-        //only try to transliterate if we are in Tibetan mode
         if (isTibetanMode) {
             InputConnection ic = getCurrentInputConnection();
             if (ic == null) return;
@@ -70,13 +118,13 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         if (ic == null) return;
 
         switch (primaryCode) {
-            case -1: //shift case
+            case -1: //shift key
                 isShifted = !isShifted;
                 englishKeyboard.setShifted(isShifted);
-                keyboardView.invalidateAllKeys(); //redrraw all keys to show uppercase/lowercase
+                keyboardView.invalidateAllKeys();//redrraw all keys to show uppercase/lowercase
                 break;
 
-            case -5: //backspace
+            case -5: // backspace
                 if (isTibetanMode && engine.getStackLength() > 0) {
                     engine.backspace();
                     ic.setComposingText(engine.getStack(), 1);
@@ -89,12 +137,13 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                 switchKeyboardLayout();
                 break;
 
-            case -101: //shae
+            case -101: // Shae
                 if(isTibetanMode) {
                     commitComposingText();
                     ic.commitText("། ", 1);
                 }
                 break;
+
             case -102: //tseg
                 if(isTibetanMode) {
                     commitComposingText();
@@ -122,6 +171,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                     ic.commitText("\n", 1);
                 }
                 break;
+                
 
             default: //all other characters
                 char code = (char) primaryCode;
@@ -141,8 +191,11 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                         code = Character.toUpperCase(code); //make it uppercase if shift is on
                     }
                     ic.commitText(String.valueOf(code), 1);
+                    
                 }
         }
+        //after every key press update the suggestions
+        updateSuggestions();
     }
 
     private void updateInput() {
@@ -166,7 +219,8 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
             ic.setComposingText(stackContent, 1);
         }
     }
-
+	
+	
     //other required listener methods(leave them empty)
     @Override public void onPress(int primaryCode) {}
     @Override public void onRelease(int primaryCode) {}
