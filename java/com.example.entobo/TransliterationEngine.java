@@ -428,6 +428,30 @@ public class TransliterationEngine {
         return "";
     }
 
+    public String transliterateStack() {
+        String stackToProcess = stack.toString();
+        StringBuilder output = new StringBuilder();
+        int i = 0;
+        while (i < stackToProcess.length()) {
+            boolean matchFound = false;
+            //;ook for the longest possible match from the current position
+            for (int j = stackToProcess.length(); j > i; j--) {
+                String sub = stackToProcess.substring(i, j);
+                if (tibetanMap.containsKey(sub)) {
+                    output.append(tibetanMap.get(sub));
+                    i = j; //move the index past the matched part
+                    matchFound = true;
+                    break;
+                }
+            }
+            if (!matchFound) {
+                //if no match was found for the character(s) at index i skip them
+                i++;
+            }
+        }
+        return output.toString();
+    }
+
     public void push(String input) {
         stack.append(input);
     }
