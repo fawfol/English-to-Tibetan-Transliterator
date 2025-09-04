@@ -3,6 +3,7 @@ package com.example.entobo;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -15,7 +16,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     private KeyboardView keyboardView;
     private TransliterationEngine engine;
 
-    //suggestion Bar UI
+    // Suggestion Bar UI
     private View candidatesView;
     private List<TextView> suggestionTextViews;
 
@@ -44,8 +45,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     @Override
     public View onCreateCandidatesView() {
         candidatesView = getLayoutInflater().inflate(R.layout.candidates_view, null);
-
-        //find all our suggestion TextViews and store them in a list
+        
         suggestionTextViews = new ArrayList<>();
         suggestionTextViews.add(candidatesView.findViewById(R.id.suggestion1));
         suggestionTextViews.add(candidatesView.findViewById(R.id.suggestion2));
@@ -56,7 +56,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         suggestionTextViews.add(candidatesView.findViewById(R.id.suggestion7));
         suggestionTextViews.add(candidatesView.findViewById(R.id.suggestion8));
 
-        //set the click listener for each TextView
         for (TextView textView : suggestionTextViews) {
             textView.setOnClickListener(v -> {
                 TextView clickedSuggestion = (TextView) v;
@@ -72,8 +71,10 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
             setCandidatesViewShown(false);
             return;
         }
-
+        
+        Log.d("TibetanIME_Debug", "Current Stack: " + engine.getStack());
         List<String> suggestions = engine.getSuggestions();
+        Log.d("TibetanIME_Debug", "Suggestions generated: " + suggestions.toString());
 
         if (suggestions.isEmpty()) {
             setCandidatesViewShown(false);
@@ -81,7 +82,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         }
 
         setCandidatesViewShown(true);
-
         int suggestionCount = Math.min(suggestions.size(), suggestionTextViews.size());
         for (int i = 0; i < suggestionCount; i++) {
             TextView textView = suggestionTextViews.get(i);
@@ -89,7 +89,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
             textView.setVisibility(View.VISIBLE);
         }
 
-        //hide any unused suggestion slots
         for (int i = suggestionCount; i < suggestionTextViews.size(); i++) {
             suggestionTextViews.get(i).setVisibility(View.GONE);
         }
@@ -98,10 +97,10 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     private void pickSuggestion(String suggestion) {
         InputConnection ic = getCurrentInputConnection();
         if (ic != null) {
-            commitComposingText(); //clear any partial text first
-            ic.commitText(suggestion + "་", 1); //commit the suggestion and a tseg
+            commitComposingText();
+            ic.commitText(suggestion + "་", 1);
             engine.clearStack();
-            updateSuggestions(); //hide the bar after selection
+            updateSuggestions();
         }
     }
 
@@ -126,9 +125,9 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
             InputConnection ic = getCurrentInputConnection();
             if (ic == null) return;
 
-            String match = engine.getLongestMatch();
-            if (!match.isEmpty()) {
-                ic.commitText(engine.getTibetan(match), 1);
+            String tibetanWord = engine.transliterateStack();
+            if (!tibetanWord.isEmpty()) {
+                ic.commitText(tibetanWord, 1);
             }
             engine.clearStack();
             ic.setComposingText("", 1);
@@ -141,41 +140,40 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         if (ic == null) return;
 
         switch (primaryCode) {
-            case -1: //shift key
+            case -1: // Shift key
                 if (!isTibetanMode) {
                     isShifted = !isShifted;
                     englishKeyboard.setShifted(isShifted);
                     keyboardView.invalidateAllKeys();
                 }
                 break;
-            case -5: //backspace
+            case -5: // Backspace
                 if (isTibetanMode && engine.getStackLength() > 0) {
                     engine.backspace();
-                    ic.setComposingText(engine.getStack(), 1);
                 } else {
                     ic.deleteSurroundingText(1, 0);
                 }
                 break;
-            case -103: //language switch key
+            case -103: // Language switch key
                 switchKeyboardLayout();
                 break;
-            case -101: //shae
+            case -101: // Shad
                 if(isTibetanMode) {
                     commitComposingText();
                     ic.commitText("། ", 1);
                 }
                 break;
-            case -102: //tseg
+            case -102: // Tseg
                 if(isTibetanMode) {
                     commitComposingText();
                     ic.commitText("་", 1);
                 }
                 break;
-            case 32: //spacee
+            case 32: // Space
                 commitComposingText();
                 ic.commitText(" ", 1);
                 break;
-            case 10: //enter key
+            case 10: // Enter key
                 commitComposingText();
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
                 int actionId = editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
@@ -185,7 +183,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                     ic.commitText("\n", 1);
                 }
                 break;
-            default: //everty  other characters
+            default: // All other characters
                 char code = (char) primaryCode;
                 if (isTibetanMode) {
                     if (Character.isDigit(code)) {
@@ -196,7 +194,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                         }
                     } else {
                         engine.push(String.valueOf(code));
-                        updateInput();
                     }
                 } else {
                     if (Character.isLetter(code) && isShifted) {
@@ -205,15 +202,15 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
                     ic.commitText(String.valueOf(code), 1);
                 }
         }
-        updateSuggestions();
+        updateInput(); // This now calls updateSuggestions internally
     }
 
     private void updateInput() {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
-
-        //just show the current composing text and let the user decide when to commit.
+        
         ic.setComposingText(engine.getStack(), 1);
+        updateSuggestions();
     }
 
     @Override public void onPress(int primaryCode) {}
