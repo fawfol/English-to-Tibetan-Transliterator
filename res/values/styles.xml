@@ -1,7 +1,18 @@
+<!-- D/PROGRAMMING/Java/tibetanime/res/values/styles.xml -->
 <resources>
-    <style name="KeyboardKeyTextStyle">
-    <item name="android:textColor">#FFFFFF</item>
-    <item name="android:textSize">20sp</item>
-    <item name="android:textStyle">bold</item>
-</style>
+	<style name="KeyboardKeyTextStyle">
+	    <item name="android:textColor">#FFFFFF</item>
+	    <item name="android:textSize">20sp</item>
+ 	   <item name="android:textStyle">bold</item>
+	</style>
+	
+	<!-- style for candidate suggestion words -->
+	<style name="CandidateTextStyle">
+	        <item name="android:textColor">#FFFFFF</item>
+	        <item name="android:textSize">18sp</item>
+	        <item name="android:gravity">center</item>
+	        <item name="android:padding">6dp</item>
+	        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
 </resources>

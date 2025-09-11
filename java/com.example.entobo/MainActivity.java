@@ -1,3 +1,4 @@
+//D/PROGRAMMING/Java/tibetanime/java/com.example.entobo/MainActivity.java 
 package com.example.entobo;
 
 import android.inputmethodservice.InputMethodService;
