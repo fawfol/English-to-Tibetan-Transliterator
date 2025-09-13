@@ -1,10 +1,7 @@
-
-<!-- D/PROGRAMMING/Java/tibetanime/res/xml/keyboard_english.xml -->
-
 <?xml version="1.0" encoding="utf-8"?>
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="9%p"
-    android:keyHeight="40dp"
+    android:keyHeight="45dp"
     android:horizontalGap="4dp"
     android:verticalGap="3dp">
 
@@ -57,9 +54,9 @@
     </Row>
 
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="-103" android:keyIcon="@drawable/ic_language" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="-103" android:keyLabel="BOD" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
         <Key android:codes="44" android:keyLabel="," android:keyWidth="12%p"/>
-        <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="40%p" android:isRepeatable="true"/>
+        <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="40%p" android:isRepeatable="false"/>
         <Key android:codes="46" android:keyLabel="." android:keyWidth="12%p"/>
         <Key android:codes="10" android:keyLabel="ENTR" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
     </Row>
