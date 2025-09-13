@@ -25,7 +25,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     private Keyboard englishKeyboard;
     private Keyboard symbolsKeyboard;
 
-    // --- State Management ---
+    // --- state management ---
     private boolean isTibetanMode = true;
     private boolean isShifted = false;
     private boolean isSymbolsMode = false;
@@ -41,7 +41,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     public View onCreateInputView() {
         keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
 
-        // --- Initialize all your keyboards ---
+        // --- initialize all the keyboards  xml---
         tibetanKeyboard = new Keyboard(this, R.xml.keyboard_tibetan);
         englishKeyboard = new Keyboard(this, R.xml.keyboard_english);
         symbolsKeyboard = new Keyboard(this, R.xml.keyboard_symbols);
@@ -50,6 +50,9 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         keyboardView.setOnKeyboardActionListener(this);
         return keyboardView;
     }
+
+
+
     @Override
     public View onCreateCandidatesView() {
         candidatesView = getLayoutInflater().inflate(R.layout.candidates_view, null);
@@ -76,7 +79,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 
     private void updateSuggestions() {
         if (!isTibetanMode || candidatesView == null) {
-            setCandidatesViewShown(false);
+            setCandidatesViewShown(true);
             return;
         }
 
