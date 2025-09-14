@@ -56,7 +56,7 @@
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="-103" android:keyLabel="BOD" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
         <Key android:codes="44" android:keyLabel="," android:keyWidth="12%p"/>
-        <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="40%p" android:isRepeatable="false"/>
+        <Key android:codes="32" android:keyLabel="SPACE ␣" android:keyWidth="40%p" android:isRepeatable="false"/>
         <Key android:codes="46" android:keyLabel="." android:keyWidth="12%p"/>
         <Key android:codes="10" android:keyLabel="ENTR" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
     </Row>

@@ -53,7 +53,7 @@
     <Row android:rowEdgeFlags="bottom" android:keyHeight="43dp">
         <Key android:codes="-103" android:keyLabel="ENG" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
         <Key android:codes="-101" android:keyLabel="།" android:keyWidth="15%p" />
-        <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="40%p" android:isRepeatable="false"/>
+        <Key android:codes="32" android:keyLabel="SPACE ␣" android:keyWidth="40%p" android:isRepeatable="false"/>
         <Key android:codes="-102" android:keyLabel="་" android:keyWidth="15%p"/>
         <Key android:codes="10" android:keyLabel="ENTER" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
     </Row>
