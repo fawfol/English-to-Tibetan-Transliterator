@@ -30,20 +30,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     private boolean isShifted = false;
     private boolean isSymbolsMode = false;
 
-    @Override
-    public void onStartInputView(EditorInfo info, boolean restarting) {
-        super.onStartInputView(info, restarting);
-
-        // ✅ Tell Android that we want a candidate bar
-        setCandidatesViewShown(true);
-
-        // (Optional) Clear previous suggestions when a new input field is focused
-        if (engine != null) {
-            engine.clearStack();
-        }
-        updateSuggestions();
-    }
-
 
     @Override
     public void onCreate() {
@@ -65,6 +51,8 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         return keyboardView;
     }
 
+
+
     @Override
     public View onCreateCandidatesView() {
         candidatesView = getLayoutInflater().inflate(R.layout.candidates_view, null);
@@ -79,15 +67,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
         suggestionTextViews.add(candidatesView.findViewById(R.id.suggestion7));
         suggestionTextViews.add(candidatesView.findViewById(R.id.suggestion8));
 
-        //hrdcode dummy text to check UI visibility
-        String[] testData = {"Test1", "Test2", "Test3", "Test4", "Test5", "Test6", "Test7", "Test8"};
-        for (int i = 0; i < suggestionTextViews.size(); i++) {
-            TextView tv = suggestionTextViews.get(i);
-            tv.setText(testData[i]);
-            tv.setVisibility(View.VISIBLE);
-        }
-
-        //still attach click listeners
         for (TextView textView : suggestionTextViews) {
             textView.setOnClickListener(v -> {
                 TextView clickedSuggestion = (TextView) v;
@@ -95,12 +74,8 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
             });
         }
 
-        //force showing the candidate view
-        setCandidatesViewShown(true);
-
         return candidatesView;
     }
-
 
     private void updateSuggestions() {
         if (!isTibetanMode || candidatesView == null) {
