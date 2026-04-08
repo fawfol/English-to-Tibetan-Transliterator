@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#202020">
+    android:background="#202020"
+    android:padding="4dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,7 +30,8 @@
         android:keyPreviewHeight="64dp"
         android:keyBackground="@drawable/key_background"
         android:keyTextColor="#FFFFFF"
-        android:keyTextSize="16sp"
+        android:keyTextSize="24sp"
+        android:keyHeight="60dp"
         android:shadowColor="#000000"
         android:shadowRadius="0"
         android:background="@android:color/transparent"

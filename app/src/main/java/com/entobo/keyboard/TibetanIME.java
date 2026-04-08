@@ -135,7 +135,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 		}
 
         Log.d("TibetanIME_Debug", "Current Stack: " + engine.getStack());
-        SuggestionResult result = engine.getSuggestionsAdvanced();
+        TransliterationEngine.SuggestionResult result = engine.getSuggestionsAdvanced();
         Log.d("TibetanIME_Debug", "Structure: " + result.structure.toString());
 		Log.d("TibetanIME_Debug", "Words: " + result.words.toString());	
 
@@ -185,17 +185,19 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     }
 
     private void commitComposingText() {
-        if (isTibetanMode && !isSymbolsMode) {
-            InputConnection ic = getCurrentInputConnection();
-            if (ic == null) return;
-            String tibetanWord = engine.transliterateStack();
-            if (!tibetanWord.isEmpty()) {
-                ic.commitText(tibetanWord, 1);
-            }
-            engine.clearStack();
-            ic.setComposingText("", 1);
-        }
-    }
+		if (isTibetanMode && !isSymbolsMode) {
+		    InputConnection ic = getCurrentInputConnection();
+		    if (ic == null) return;
+
+		    String tibetanWord = engine.transliterateStack();
+		    if (!tibetanWord.isEmpty()) {
+		        ic.commitText(tibetanWord, 1);
+		    }
+
+		    engine.clearStack();
+		    ic.setComposingText("", 1);
+		}
+	}
 
 
     @Override
