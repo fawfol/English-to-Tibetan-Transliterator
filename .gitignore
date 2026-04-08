@@ -1,0 +1,51 @@
+# ========================
+# Gradle & Build
+# ========================
+.gradle/
+build/
+*/build/
+
+# ========================
+# Local config
+# ========================
+local.properties
+
+# ========================
+# IDE (Android Studio / IntelliJ)
+# ========================
+*.iml
+.idea/
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# ========================
+# OS files
+# ========================
+.DS_Store
+
+# ========================
+# Native build
+# ========================
+.externalNativeBuild/
+.cxx/
+
+# ========================
+# APK / Bundle outputs
+# ========================
+*.apk
+*.aab
+
+# ========================
+# Logs
+# ========================
+*.log
+
+# ========================
+# KEYSTORE (VERY IMPORTANT)
+# ========================
+*.jks
+*.keystore
