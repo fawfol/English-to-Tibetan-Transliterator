@@ -19,8 +19,8 @@ import java.util.List;
 public class TibetanIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
     private KeyboardView keyboardView;
     private TransliterationEngine engine;
-    // Suggestion Bar UI
-    private View candidatesView;
+    /*/ Suggestion Bar UI
+    private View candidatesView;*/
 
     // --- Keyboard Layouts ---
     private Keyboard tibetanKeyboard;
@@ -37,12 +37,27 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 	public boolean onEvaluateFullscreenMode() {
 		return false;
 	}
+	/*@Override
+	public void onComputeInsets(Insets outInsets) {
+		super.onComputeInsets(outInsets);
+
+		// Tell Android: candidates view is separate from keyboard
+		if (candidatesView != null && candidatesView.isShown()) {
+		    int candidatesHeight = candidatesView.getHeight();
+
+		    // This is the KEY line
+		    outInsets.contentTopInsets = candidatesHeight;
+
+		    // Optional (helps stability)
+		    outInsets.visibleTopInsets = candidatesHeight;
+		}
+	}*/
 	
 	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting) {
 		super.onStartInput(attribute, restarting);
 
-		setCandidatesViewShown(true);
+		//setCandidatesViewShown(true);
 	}
 
     @Override
@@ -77,19 +92,22 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 		return root;
 	}
 
-   @Override
+   /*@Override
 	public View onCreateCandidatesView() {
 		candidatesView = getLayoutInflater().inflate(R.layout.candidates_view, null);
 
 		candidatesView.setLayoutParams(new ViewGroup.LayoutParams(
 		        ViewGroup.LayoutParams.MATCH_PARENT,
 		        ViewGroup.LayoutParams.WRAP_CONTENT
+		        
 		));
+		
+		//setCandidatesViewShown(true);
 
 		candidatesView.setBackgroundColor(Color.parseColor("#303030"));
 
 		return candidatesView;
-	}
+	}*/
 
 	private void addCandidateView(FlexboxLayout container, String text, boolean isPrimary) {
 		TextView tv = new TextView(this, null, 0, R.style.CandidateTextStyle);
@@ -112,7 +130,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 	}
 
     private void updateSuggestions() {
-        if (!isTibetanMode || candidatesView == null) {
+        if (!isTibetanMode || keyboardView == null) {
 			return;
 		}
 
@@ -122,11 +140,12 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 		Log.d("TibetanIME_Debug", "Words: " + result.words.toString());	
 
 		if (result.structure.isEmpty() && result.words.isEmpty()) {
-			setCandidatesViewShown(false);
+			//setCandidatesViewShown(false);
 		} else {
-			setCandidatesViewShown(true);
+			//setCandidatesViewShown(true);
 		}
-        FlexboxLayout container = candidatesView.findViewById(R.id.candidatesRoot);
+		FlexboxLayout container = keyboardView.getRootView().findViewById(R.id.candidatesRoot);
+		if (container == null) return;
 
 		container.removeAllViews();
 
@@ -138,10 +157,6 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 			addCandidateView(container, s, false);
 		}
 
-		candidatesView.requestLayout();
-		candidatesView.invalidate();
-		candidatesView.requestLayout();
-		candidatesView.invalidate();	
     }
 
     private void pickSuggestion(String suggestion) {

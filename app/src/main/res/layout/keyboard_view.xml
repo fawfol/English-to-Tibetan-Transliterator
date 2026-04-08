@@ -1,24 +1,37 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#202020"
-    android:padding="4dp">
+    android:orientation="vertical"
+    android:background="#202020">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="120dp">
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/candidatesRoot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:flexDirection="row" />
+    </ScrollView>
 
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-		android:keyPreviewLayout="@layout/key_preview"
-		android:keyPreviewOffset="0dp"
-		android:keyPreviewHeight="64dp"
+        android:keyPreviewLayout="@layout/key_preview"
+        android:keyPreviewOffset="0dp"
+        android:keyPreviewHeight="64dp"
         android:keyBackground="@drawable/key_background"
         android:keyTextColor="#FFFFFF"
-		android:keyTextSize="16sp"
-		android:shadowColor="#000000"
-		android:shadowRadius="0"
-
+        android:keyTextSize="16sp"
+        android:shadowColor="#000000"
+        android:shadowRadius="0"
         android:background="@android:color/transparent"
     />
 
