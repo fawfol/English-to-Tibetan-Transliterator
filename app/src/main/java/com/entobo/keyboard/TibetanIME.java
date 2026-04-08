@@ -31,6 +31,7 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
     private boolean isTibetanMode = true;
     private boolean isShifted = false;
     private boolean isSymbolsMode = false;
+    
 	
 	@Override
 	public boolean onEvaluateFullscreenMode() {
@@ -90,6 +91,25 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 		return candidatesView;
 	}
 
+	private void addCandidateView(FlexboxLayout container, String text, boolean isPrimary) {
+		TextView tv = new TextView(this, null, 0, R.style.CandidateTextStyle);
+
+		tv.setText(text);
+		tv.setTextSize(isPrimary ? 20 : 18);
+
+		tv.setPadding(20, 12, 24, 12);
+
+		tv.setOnClickListener(v -> pickSuggestion(text));
+
+		FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+		        ViewGroup.LayoutParams.WRAP_CONTENT,
+		        ViewGroup.LayoutParams.WRAP_CONTENT
+		);
+		params.setMargins(8, 4, 8, 4);
+		tv.setLayoutParams(params);
+
+		container.addView(tv);
+	}
 
     private void updateSuggestions() {
         if (!isTibetanMode || candidatesView == null) {
@@ -97,35 +117,29 @@ public class TibetanIME extends InputMethodService implements KeyboardView.OnKey
 		}
 
         Log.d("TibetanIME_Debug", "Current Stack: " + engine.getStack());
-        List<String> suggestions = engine.getSuggestions();
-        Log.d("TibetanIME_Debug", "Suggestions generated: " + suggestions.toString());
+        SuggestionResult result = engine.getSuggestionsAdvanced();
+        Log.d("TibetanIME_Debug", "Structure: " + result.structure.toString());
+		Log.d("TibetanIME_Debug", "Words: " + result.words.toString());	
 
-		if (suggestions.isEmpty()) {
+		if (result.structure.isEmpty() && result.words.isEmpty()) {
 			setCandidatesViewShown(false);
-		}
-		if (!suggestions.isEmpty()) {
+		} else {
 			setCandidatesViewShown(true);
 		}
         FlexboxLayout container = candidatesView.findViewById(R.id.candidatesRoot);
 
 		container.removeAllViews();
 
-		for (String suggestion : suggestions) {
-			TextView tv = new TextView(this, null, 0, R.style.CandidateTextStyle);
-			tv.setText(suggestion);
-			tv.setTextSize(19);	
-			tv.setPadding(20, 12, 24, 12);
-
-			tv.setOnClickListener(v -> pickSuggestion(suggestion));
-			
-			FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
-				ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT
-			);
-			params.setMargins(8, 4, 8, 4);
-			tv.setLayoutParams(params);
-			container.addView(tv);
+		for (String s : result.structure) {
+			addCandidateView(container, s, true);
 		}
+
+		for (String s : result.words) {
+			addCandidateView(container, s, false);
+		}
+
+		candidatesView.requestLayout();
+		candidatesView.invalidate();
 		candidatesView.requestLayout();
 		candidatesView.invalidate();	
     }
