@@ -50,7 +50,7 @@ public class TransliterationEngine {
 		VALID_PREFIX_MAP.put("ཙ", Arrays.asList("ག", "བ"));
 		VALID_PREFIX_MAP.put("ཚ", Arrays.asList("འ"));
 		VALID_PREFIX_MAP.put("ཛ", Arrays.asList("བ", "མ", "འ"));
-		VALID_PREFIX_MAP.put("ཝ", Arrays.asList(""));
+		VALID_PREFIX_MAP.put("ཝ", new ArrayList<>());
 		VALID_PREFIX_MAP.put("ཞ", Arrays.asList("ག", "བ", "འ"));
 		VALID_PREFIX_MAP.put("ཟ", Arrays.asList("ག", "བ"));
 		VALID_PREFIX_MAP.put("འ", new ArrayList<>());

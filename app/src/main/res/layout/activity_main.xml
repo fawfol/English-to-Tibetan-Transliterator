@@ -1,121 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="#101114"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
+        <!-- Hero Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_title"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"/>
+            android:orientation="vertical"
+            android:background="#1A1D24"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
 
-        <TextView
-            android:id="@+id/howToTitleTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/appTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="En2Bo Keyboard"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="English → Tibetan Transliterator"
+                android:textColor="#B8C1CC"
+                android:textSize="16sp"
+                android:layout_marginTop="6dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type Tibetan more easily with phonetic English input."
+                android:textColor="#D7DCE2"
+                android:textSize="15sp"
+                android:lineSpacingExtra="3dp"
+                android:layout_marginTop="14dp" />
+        </LinearLayout>
+
+        <!-- Welcome Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/how_to_title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="vertical"
+            android:background="#181B22"
+            android:padding="18dp"
+            android:layout_marginBottom="14dp">
 
-        <TextView
-            android:id="@+id/howToStepsTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_title"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thank you for trying this project. This app is built to make Tibetan typing simpler and more accessible on mobile."
+                android:textColor="#D5DBE3"
+                android:textSize="15sp"
+                android:lineSpacingExtra="3dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <!-- How To Use Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/how_to_steps"
-            android:textSize="16sp"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="24dp"/>
+            android:orientation="vertical"
+            android:background="#181B22"
+            android:padding="18dp"
+            android:layout_marginBottom="14dp">
 
-        <TextView
-            android:id="@+id/aboutTitleTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/how_to_title"
+                android:textColor="#FFFFFF"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/howToTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/how_to_steps"
+                android:textColor="#D5DBE3"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/enableKeyboardBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Keyboard Settings"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                android:layout_marginBottom="10dp" />
+
+            <Button
+                android:id="@+id/switchKeyboardBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Switch to En2Bo Keyboard"
+                android:textAllCaps="false"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <!-- Transliteration Map Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="vertical"
+            android:background="#181B22"
+            android:padding="18dp"
+            android:layout_marginBottom="14dp">
 
-        <TextView
-            android:id="@+id/aboutDescTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Roman → Tibetan Map"
+                android:textColor="#FFFFFF"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="See the transliteration pairs currently available in the app."
+                android:textColor="#D5DBE3"
+                android:textSize="15sp"
+                android:lineSpacingExtra="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/showTranslitMapButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show Transliteration Map"
+                android:textAllCaps="false"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <!-- About Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_description"
-            android:textSize="16sp"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="24dp"/>
+            android:orientation="vertical"
+            android:background="#181B22"
+            android:padding="18dp"
+            android:layout_marginBottom="14dp">
 
-        <TextView
-            android:id="@+id/storyTitleTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_title"
+                android:textColor="#FFFFFF"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/aboutTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_description"
+                android:textColor="#D5DBE3"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <!-- Motivation Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/story_title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="vertical"
+            android:background="#181B22"
+            android:padding="18dp"
+            android:layout_marginBottom="14dp">
 
-        <TextView
-            android:id="@+id/storyDescTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/story_title"
+                android:textColor="#FFFFFF"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/storyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/story_description"
+                android:textColor="#D5DBE3"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <!-- Contact Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/story_description"
-            android:textSize="16sp"
-            android:lineSpacingExtra="4dp"/>
+            android:orientation="vertical"
+            android:background="#181B22"
+            android:padding="18dp"
+            android:layout_marginBottom="14dp">
 
-        <Button
-            android:id="@+id/showTranslitMapButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show Roman–Tibetan Map"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_title"
+                android:textColor="#FFFFFF"
+                android:textSize="19sp"
+                android:textStyle="bold" />
 
-
-
-        <TextView
-            android:id="@+id/contactTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/contact_title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/contactInfoTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/contact_info"
-            android:textSize="16sp"
-            android:autoLink="web|email"
-            android:linksClickable="true"
-            android:layout_marginBottom="24dp"/>
+            <TextView
+                android:id="@+id/contactInfoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#9CCBFF"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/copyrightTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/copyright_text"
-            android:textSize="14sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"/>
-
-
+            android:textColor="#7E8794"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
 
     </LinearLayout>
 </ScrollView>
