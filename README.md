@@ -22,6 +22,7 @@ I : Features
 
 II : Installation
 
+```
 		Method 1: Manual APK install
 			adb install app-release.apk
 
@@ -34,8 +35,9 @@ II : Installation
 			Go to Keyboard list and default
 			Enable En2Bo Transliterator
 			Set it as default keyboard
-
+```
 III : Project Structure
+```
 		app/
 		├── java/com/entobo/keyboard/
 		│   ├── TibetanIME.java          # Main keyboard service
@@ -47,9 +49,9 @@ III : Project Structure
 		│   ├── layout/                  # Keyboard + candidate views
 		│   ├── xml/                     # Keyboard layouts
 		│   └── values/                  # Strings, styles
-
+```
 IV : Motivation
-
+```
 		“A culture lives through its language.”
 
 		As a Tibetan refugee, this project is deeply personal.
@@ -64,9 +66,9 @@ IV : Motivation
 		make Tibetan typing fast and natural
 		encourage younger generations to use Tibetan daily
 		strengthen cultural identity through digital use
-
+```
 V : Contributing
-
+```
 		Contributions are welcome!
 
 		You can help with:
@@ -75,7 +77,9 @@ V : Contributing
 		optimizing suggestion logic
 		UI/UX improvements
 		adding Tibetan linguistic rules
-
+```
 VI : Contact
-		🌐 Website: https://tenzinkalsang.online
+```
+`		🌐 Website: https://tenzinkalsang.online
 		📧 Email: kalsangkalsang5@gmail.com
+```
