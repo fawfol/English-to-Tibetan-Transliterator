@@ -1,7 +1,7 @@
 package com.entobo.keyboard;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.net.Uri;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -29,15 +30,69 @@ public class MainActivity extends AppCompatActivity {
         Button switchBtn = findViewById(R.id.switchKeyboardBtn);
         Button showMapButton = findViewById(R.id.showTranslitMapButton);
 
-        // How-to text
-        TextView howToTextView = findViewById(R.id.howToTextView);
-        String howToHtml = getString(R.string.how_to_steps);
+        // How-to steps container
+        LinearLayout container = findViewById(R.id.stepsContainer);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            howToTextView.setText(Html.fromHtml(howToHtml, Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            howToTextView.setText(Html.fromHtml(howToHtml));
+        // Title
+        TextView title = new TextView(this);
+        title.setText("After installing:");
+        title.setTextSize(18);
+        title.setTextColor(getResources().getColor(android.R.color.white));
+        title.setPadding(0, 0, 0, 16);
+        container.addView(title);
+
+        // First set of steps
+        String[] steps = {
+                "1. Open your phone's Settings.",
+                "2. Go to General Management > Keyboard list and default.",
+                "3. Turn on En2Bo Transliterator.",
+                "4. Open any app with a text field, like Messages or WhatsApp.",
+                "5. Tap the keyboard icon or choose the keyboard option.",
+                "6. Select En2Bo Transliterator."
+        };
+
+        for (String step : steps) {
+            TextView tv = new TextView(this);
+            tv.setText(step);
+            tv.setTextSize(15);
+            tv.setTextColor(getResources().getColor(android.R.color.white));
+            tv.setPadding(0, 8, 0, 8);
+            container.addView(tv);
         }
+
+        // OR section
+        TextView orText = new TextView(this);
+        orText.setText("Or:");
+        orText.setTextSize(16);
+        orText.setTextColor(getResources().getColor(android.R.color.white));
+        orText.setPadding(0, 24, 0, 16);
+        container.addView(orText);
+
+        // Second set of steps
+        String[] steps2 = {
+                "1. Open your phone's Settings.",
+                "2. Search for Keyboard list and default.",
+                "3. Turn on En2Bo Transliterator.",
+                "4. In the same settings page, tap Default keyboard.",
+                "5. Select En2Bo Transliterator."
+        };
+
+        for (String step : steps2) {
+            TextView tv = new TextView(this);
+            tv.setText(step);
+            tv.setTextSize(15);
+            tv.setTextColor(getResources().getColor(android.R.color.white));
+            tv.setPadding(0, 8, 0, 8);
+            container.addView(tv);
+        }
+
+        // Important note
+        TextView note = new TextView(this);
+        note.setText("\nImportant: This app contains the keyboard service. If you uninstall the app, the keyboard will also be removed.\n\nThe project is still in progress, and I am currently improving word suggestion logic for the candidate view above the keyboard.\n\nAny contribution or feedback through Gmail or Play Store is deeply appreciated.");
+        note.setTextSize(15);
+        note.setTextColor(getResources().getColor(android.R.color.white));
+        note.setPadding(0, 16, 0, 0);
+        container.addView(note);
 
         // Contact text
         TextView contactTextView = findViewById(R.id.contactInfoTextView);
@@ -50,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         contactTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        
+        Button supportBtn = findViewById(R.id.supportBtn);
+		supportBtn.setOnClickListener(v -> {
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://chai4.me/tenzinkalsang"));
+			startActivity(intent);
+		});
 
         // Enable keyboard button
         enableBtn.setOnClickListener(v -> {

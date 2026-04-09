@@ -21,7 +21,10 @@ I : Features
 ```
 
 II : Installation
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b06369 (update for homepage ui and content)
 ```
 		Method 1: Manual APK install
 			adb install app-release.apk
@@ -80,6 +83,10 @@ V : Contributing
 ```
 VI : Contact
 ```
+<<<<<<< HEAD
 `		🌐 Website: https://tenzinkalsang.online
+=======
+	🌐 Website: https://tenzinkalsang.online
+>>>>>>> 5b06369 (update for homepage ui and content)
 		📧 Email: kalsangkalsang5@gmail.com
 ```
