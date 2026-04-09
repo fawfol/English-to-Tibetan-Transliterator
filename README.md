@@ -1,7 +1,8 @@
 # English-to-Tibetan-Transliterator
 
 I : Features
-```		1.Phonetic typing
+```
+		1.Phonetic typing
 			Type Tibetan using English letters (e.g., ka → ཀ, do → གྲོ)
 		2.Real-time transliteration engine
 			Converts input dynamically using longest-match logic
