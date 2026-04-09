@@ -1,38 +1,38 @@
 # English-to-Tibetan-Transliterator
 
 I : Features
-	1.Phonetic typing
-		Type Tibetan using English letters (e.g., ka → ཀ, do → གྲོ)
-	2.Real-time transliteration engine
-		Converts input dynamically using longest-match logic
-	3.Syllable-based system
-		Handles Tibetan stacking rules, prefixes, and suffixes
-	4.Smart suggestion bar
-		Prefix suggestions (ག, ད, བ, མ, འ) , Stack suggestions (ར, ལ, ས) : Built dynamically from current input
-	5.Tibetan numerals support
-		1 → ༡, 2 → ༢, etc.
-	6.Dual keyboard modes
-		Tibetan transliteration
-	7.English typing
-		Custom keyboard UI
-	Long press space to switch keyboard
-	Clean candidate layout using Flexbox
+		1.Phonetic typing
+			Type Tibetan using English letters (e.g., ka → ཀ, do → གྲོ)
+		2.Real-time transliteration engine
+			Converts input dynamically using longest-match logic
+		3.Syllable-based system
+			Handles Tibetan stacking rules, prefixes, and suffixes
+		4.Smart suggestion bar
+			Prefix suggestions (ག, ད, བ, མ, འ) , Stack suggestions (ར, ལ, ས) : Built dynamically from current input
+		5.Tibetan numerals support
+			1 → ༡, 2 → ༢, etc.
+		6.Dual keyboard modes
+			Tibetan transliteration
+		7.English typing
+			Custom keyboard UI
+		Long press space to switch keyboard
+		Clean candidate layout using Flexbox
 
 
 II : Installation
 
-	Method 1: Manual APK install
-		adb install app-release.apk
+		Method 1: Manual APK install
+			adb install app-release.apk
 
-	  If error occurs:
-		adb uninstall com.entobo.keyboard
-		adb install app-release.apk
+		  If error occurs:
+			adb uninstall com.entobo.keyboard
+			adb install app-release.apk
 
-	Method 2: Enable on device
-		Open Settings
-		Go to Keyboard list and default
-		Enable En2Bo Transliterator
-		Set it as default keyboard
+		Method 2: Enable on device
+			Open Settings
+			Go to Keyboard list and default
+			Enable En2Bo Transliterator
+			Set it as default keyboard
 
 III : Project Structure
 		app/
