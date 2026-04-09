@@ -234,17 +234,88 @@
                 android:textSize="15sp"
                 android:lineSpacingExtra="4dp"
                 android:layout_marginTop="10dp" />
-            
-            <Button
-				android:id="@+id/supportBtn"
+           
+        </LinearLayout>
+        
+        <LinearLayout
+			android:id="@+id/donationCard"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:background="#181B22"
+			android:padding="18dp"
+			android:layout_marginBottom="14dp">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Support This Project"
+				android:textColor="#FFFFFF"
+				android:textSize="19sp"
+				android:textStyle="bold" />
+
+			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Buy me a chai to drink with Tsampa ☕"
-				android:textAllCaps="false"
+				android:text="Buy me Butter tea to drink with Tsampa"
+				android:textColor="#D5DBE3"
 				android:textSize="15sp"
-				android:layout_marginTop="12dp"/>
-            
-        </LinearLayout>
+				android:lineSpacingExtra="4dp"
+				android:layout_marginTop="10dp"
+				android:layout_marginBottom="16dp" />
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:weightSum="3"
+				android:layout_marginBottom="12dp">
+
+				<Button
+				    android:id="@+id/donate10Btn"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="₹10"
+				    android:textAllCaps="false"
+				    android:layout_marginEnd="6dp" />
+
+				<Button
+				    android:id="@+id/donate50Btn"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="₹50"
+				    android:textAllCaps="false"
+				    android:layout_marginStart="3dp"
+				    android:layout_marginEnd="3dp" />
+
+				<Button
+				    android:id="@+id/donate100Btn"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="₹100"
+				    android:textAllCaps="false"
+				    android:layout_marginStart="6dp" />
+			</LinearLayout>
+
+			<Button
+				android:id="@+id/donateCustomBtn"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Donate with UPI"
+				android:textAllCaps="false"
+				android:layout_marginBottom="10dp" />
+
+			<Button
+				android:id="@+id/showQrBtn"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Show QR Code"
+				android:textAllCaps="false" />
+
+		</LinearLayout>
 
         <TextView
             android:id="@+id/copyrightTextView"

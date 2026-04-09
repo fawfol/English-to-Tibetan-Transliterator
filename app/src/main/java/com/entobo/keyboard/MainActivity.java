@@ -1,18 +1,22 @@
 package com.entobo.keyboard;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.net.Uri;
+
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -25,10 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Buttons
+        // Main buttons
         Button enableBtn = findViewById(R.id.enableKeyboardBtn);
         Button switchBtn = findViewById(R.id.switchKeyboardBtn);
         Button showMapButton = findViewById(R.id.showTranslitMapButton);
+
+        // Donation buttons
+        Button donate10Btn = findViewById(R.id.donate10Btn);
+        Button donate50Btn = findViewById(R.id.donate50Btn);
+        Button donate100Btn = findViewById(R.id.donate100Btn);
+        Button donateCustomBtn = findViewById(R.id.donateCustomBtn);
+        Button showQrBtn = findViewById(R.id.showQrBtn);
 
         // How-to steps container
         LinearLayout container = findViewById(R.id.stepsContainer);
@@ -105,12 +116,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         contactTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        
-        Button supportBtn = findViewById(R.id.supportBtn);
-		supportBtn.setOnClickListener(v -> {
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://chai4.me/tenzinkalsang"));
-			startActivity(intent);
-		});
 
         // Enable keyboard button
         enableBtn.setOnClickListener(v -> {
@@ -167,5 +172,70 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("Close", null)
                     .show();
         });
+
+        // Donation button actions
+        if (donate10Btn != null) {
+            donate10Btn.setOnClickListener(v -> openUpiPayment("10"));
+        }
+
+        if (donate50Btn != null) {
+            donate50Btn.setOnClickListener(v -> openUpiPayment("50"));
+        }
+
+        if (donate100Btn != null) {
+            donate100Btn.setOnClickListener(v -> openUpiPayment("100"));
+        }
+
+        if (donateCustomBtn != null) {
+            donateCustomBtn.setOnClickListener(v -> openUpiPayment(null));
+        }
+
+        if (showQrBtn != null) {
+            showQrBtn.setOnClickListener(v -> showQrDialog());
+        }
+    }
+
+    private void openUpiPayment(String amount) {
+        String upiId = BuildConfig.UPI_ID;
+        String name = BuildConfig.UPI_NAME;
+
+        Uri uri;
+        if (amount != null) {
+            uri = Uri.parse("upi://pay?pa=" + upiId
+                    + "&pn=" + Uri.encode(name)
+                    + "&am=" + amount
+                    + "&cu=INR");
+        } else {
+            uri = Uri.parse("upi://pay?pa=" + upiId
+                    + "&pn=" + Uri.encode(name)
+                    + "&cu=INR");
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+
+        try {
+            startActivity(Intent.createChooser(intent, "Pay with"));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "No UPI app found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showQrDialog() {
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.my_upi_qr);
+        imageView.setAdjustViewBounds(true);
+
+        int paddingPx = (int) (24 * getResources().getDisplayMetrics().density);
+        imageView.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.addView(imageView);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Scan to Support")
+                .setView(scrollView)
+                .setPositiveButton("Close", null)
+                .show();
     }
 }
