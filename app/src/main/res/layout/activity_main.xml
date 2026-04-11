@@ -24,7 +24,7 @@
                 android:id="@+id/appTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="En2Bo Keyboard"
+                android:text="English To Tibetan"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="English → Tibetan Transliterator"
+                android:text="Transliterator Keyboard"
                 android:textColor="#B8C1CC"
                 android:textSize="16sp"
                 android:layout_marginTop="6dp" />
@@ -92,12 +92,12 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-				android:id="@+id/stepsContainer"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				android:layout_marginTop="10dp"
-				android:layout_marginBottom="16dp"/>
+                android:id="@+id/stepsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp" />
 
             <Button
                 android:id="@+id/enableKeyboardBtn"
@@ -234,10 +234,11 @@
                 android:textSize="15sp"
                 android:lineSpacingExtra="4dp"
                 android:layout_marginTop="10dp" />
-           
         </LinearLayout>
-        
-        <LinearLayout
+
+        <!-- Donation Card -->
+        <!-- Donation Card -->
+		<LinearLayout
 			android:id="@+id/donationCard"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -257,63 +258,75 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Buy me Butter tea to drink with Tsampa"
+				android:text="If this keyboard helps you, you can support its growth "
 				android:textColor="#D5DBE3"
 				android:textSize="15sp"
 				android:lineSpacingExtra="4dp"
 				android:layout_marginTop="10dp"
-				android:layout_marginBottom="16dp" />
+				android:layout_marginBottom="14dp" />
 
+			<!-- Quick amounts -->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:weightSum="3"
-				android:layout_marginBottom="12dp">
+				android:layout_marginBottom="14dp">
 
 				<Button
-				    android:id="@+id/donate10Btn"
+				    android:id="@+id/donate12Btn"
 				    android:layout_width="0dp"
 				    android:layout_height="wrap_content"
 				    android:layout_weight="1"
-				    android:text="₹10"
+				    android:text="₹12.5"
 				    android:textAllCaps="false"
 				    android:layout_marginEnd="6dp" />
+
+				<Button
+				    android:id="@+id/donate25Btn"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="₹25"
+				    android:textAllCaps="false"
+				    android:layout_marginStart="3dp"
+				    android:layout_marginEnd="3dp" />
 
 				<Button
 				    android:id="@+id/donate50Btn"
 				    android:layout_width="0dp"
 				    android:layout_height="wrap_content"
 				    android:layout_weight="1"
-				    android:text="₹50"
-				    android:textAllCaps="false"
-				    android:layout_marginStart="3dp"
-				    android:layout_marginEnd="3dp" />
-
-				<Button
-				    android:id="@+id/donate100Btn"
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:text="₹100"
+				    android:text="₹50.5"
 				    android:textAllCaps="false"
 				    android:layout_marginStart="6dp" />
 			</LinearLayout>
 
-			<Button
-				android:id="@+id/donateCustomBtn"
+			<!-- Secondary options -->
+			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Donate with UPI"
-				android:textAllCaps="false"
-				android:layout_marginBottom="10dp" />
+				android:orientation="horizontal"
+				android:weightSum="2">
 
-			<Button
-				android:id="@+id/showQrBtn"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="Show QR Code"
-				android:textAllCaps="false" />
+				<Button
+				    android:id="@+id/showQrBtn"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="QR"
+				    android:textAllCaps="false"
+				    android:layout_marginEnd="6dp" />
+
+				<Button
+				    android:id="@+id/copyUpiBtn"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="Copy UPI"
+				    android:textAllCaps="false"
+				    android:layout_marginStart="6dp" />
+			</LinearLayout>
 
 		</LinearLayout>
 
